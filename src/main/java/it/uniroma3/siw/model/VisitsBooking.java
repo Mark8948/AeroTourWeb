@@ -16,9 +16,12 @@ public class VisitsBooking {
 	private String guideName;
 	private Integer visitDate; // day,month,year of the visit in format DDMMYYYY.
 	
-	 @Enumerated(EnumType.STRING)
-	    private VisitsBooking status;
-	 
+	// @Enumerated(EnumType.STRING)
+	//    private VisitsBooking status;
+	
+	//TODO: Sistemare questo macello
+	
+	
 	public String getGuideName() {
 		return guideName;
 	}

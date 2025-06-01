@@ -12,15 +12,15 @@ public class OrderRequest {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    //TODO: Sistemare tutto il resto
 
-    private String engineType;
-    private String interiorOption;
-    private String avionicsPackage;
+    //private String engineType;
+    //private String interiorOption;
+    //private String avionicsPackage;
 
-    private Double totalPrice;
+    //private Double totalPrice;
 
     //BOZZA NON PRENDERE SUL SERIO QUESTE COSE
 
     // Getters e setters
 }
-
