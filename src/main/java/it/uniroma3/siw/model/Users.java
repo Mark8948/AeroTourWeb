@@ -1,5 +1,7 @@
 package it.uniroma3.siw.model;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,7 +11,7 @@ import jakarta.persistence.Id;
 
 
 @Entity
-public class User {
+public class Users {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,7 +26,7 @@ public class User {
 	@Column(nullable=false, length = 16, unique = true)
 	private String CF;  //CODICE FISCALE
 	
-	private int dateOfBirth; //In format MMDDYYYY
+	private LocalDate dateOfBirth; //In format MMDDYYYY
 	
 	
 	public String getName() {
@@ -45,10 +47,10 @@ public class User {
 	public void setCF(String cF) {
 		CF = cF;
 	}
-	public int getDateOfBirth() {
+	public LocalDate getDateOfBirth() {
 		return dateOfBirth;
 	}
-	public void setDateOfBirth(int dateOfBirth) {
+	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 	
@@ -56,7 +58,7 @@ public class User {
 	public boolean equals(Object obj) {
 	    if (this == obj) return true;
 	    if (obj == null || getClass() != obj.getClass()) return false;
-	    User other = (User) obj;
+	    Users other = (Users) obj;
 	    return id != null && id.equals(other.id);
 	}
 
