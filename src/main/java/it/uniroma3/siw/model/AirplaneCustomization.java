@@ -1,5 +1,8 @@
 package it.uniroma3.siw.model;
 
+import java.time.LocalDate;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,9 +15,15 @@ public class AirplaneCustomization {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
+	@Column(nullable=false)
+	private String descriptionName;
+	
+	@Column(nullable = false, length = 2000)
 	private String description;
-	private int modificationFirstAvailabilityDate; //date from when a modification is available to purchase in format DDMMYYYY.
-	private int modificationPrice;
+	
+	private LocalDate modificationFirstAvailabilityDate; //date since when a modification is available to purchase in format DDMMYYYY.
+	private float modificationPrice;
+	private String urlImage;
 	
 	public String getDescription() {
 		return description;
@@ -22,17 +31,35 @@ public class AirplaneCustomization {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public int getModificationFirstAvailabilityDate() {
+	public LocalDate getModificationFirstAvailabilityDate() {
 		return modificationFirstAvailabilityDate;
 	}
-	public void setModificationFirstAvailabilityDate(int modificationAvailabilityDate) {
+	public void setModificationFirstAvailabilityDate(LocalDate modificationAvailabilityDate) {
 		this.modificationFirstAvailabilityDate = modificationAvailabilityDate;
 	}
-	public int getModificationPrice() {
+	public float getModificationPrice() {
 		return modificationPrice;
 	}
-	public void setModificationPrice(int modificationPrice) {
+	public void setModificationPrice(float modificationPrice) {
 		this.modificationPrice = modificationPrice;
+	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public String getDescriptionName() {
+		return descriptionName;
+	}
+	public void setDescriptionName(String descriptionName) {
+		this.descriptionName = descriptionName;
+	}
+	public String getUrlImage() {
+		return urlImage;
+	}
+	public void setUrlImage(String urlImage) {
+		this.urlImage = urlImage;
 	}
 	
 }
