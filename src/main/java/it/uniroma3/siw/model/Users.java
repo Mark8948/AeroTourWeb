@@ -26,9 +26,24 @@ public class Users {
 	@Column(nullable=false, length = 16, unique = true)
 	private String CF;  //CODICE FISCALE
 	
-	private LocalDate dateOfBirth; //In format MMDDYYYY
+	private LocalDate dateOfBirth;
+	
+	@Column(nullable = false)
+	private Roles role = Roles.USER;
 	
 	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public Roles getRole() {
+		return role;
+	}
+	public void setRole(Roles role) {
+		this.role = role;
+	}
 	public String getName() {
 		return name;
 	}
