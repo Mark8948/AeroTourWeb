@@ -1,5 +1,9 @@
 package it.uniroma3.siw.model;
 
+//import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -13,8 +17,15 @@ public class VisitsBooking {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long Id;
+	
+	
 	private String guideName;
-	private Integer visitDate; // day,month,year of the visit in format DDMMYYYY.
+	
+	@Column(name = "date_time_visit")
+	private LocalDateTime visitDateTime; // day,month,year of the visit in format DDMMYYYY.
+	
+	@Column(length = 10)
+	private Integer guideCellNumber;
 	
 	// @Enumerated(EnumType.STRING)
 	//    private VisitsBooking status;
@@ -28,11 +39,17 @@ public class VisitsBooking {
 	public void setGuideName(String guideName) {
 		this.guideName = guideName;
 	}
-	public Integer getVisitDate() {
-		return visitDate;
+	public LocalDateTime getVisitDate() {
+		return visitDateTime;
 	}
-	public void setVisitDate(Integer date) {
-		this.visitDate = date;
+	public void setVisitDate(LocalDateTime date) {
+		this.visitDateTime = date;
+	}
+	public Integer getGuideCellNumber() {
+		return guideCellNumber;
+	}
+	public void setGuideCellNumber(Integer guideCellNumber) {
+		this.guideCellNumber = guideCellNumber;
 	}
 	
 	
