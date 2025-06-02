@@ -2,5 +2,5 @@ package it.uniroma3.siw.model.enums;
 
 public enum Roles {
 	USER,
-	SERVER_ADMIN
+	SERVER_ADMINISTRATOR
 }
