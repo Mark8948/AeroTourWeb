@@ -1,4 +1,4 @@
-package it.uniroma3.siw.model;
+package it.uniroma3.siw.model.tables;
 
 //import java.time.LocalDate;
 import java.time.Year;

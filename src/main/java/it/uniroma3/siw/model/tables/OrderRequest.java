@@ -1,4 +1,4 @@
-package it.uniroma3.siw.model;
+package it.uniroma3.siw.model.tables;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class OrderRequest {
     private Long id;
 
     @ManyToOne(optional = false)
-    private User user;
+    private Users user;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
@@ -39,7 +39,7 @@ public class OrderRequest {
     // Lista delle modifiche applicate a questo aereo nell'ordine
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(
-        name = "orderrequest_customizations",
+        name = "list_modifications_applied",
         joinColumns = @JoinColumn(name = "orderrequest_id"),
         inverseJoinColumns = @JoinColumn(name = "customization_id")
     )
@@ -69,11 +69,11 @@ public class OrderRequest {
         this.id = id;
     }
 
-    public User getUser() {
+    public Users getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(Users user) {
         this.user = user;
     }
 

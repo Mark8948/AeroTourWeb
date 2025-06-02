@@ -1,5 +1,8 @@
-package it.uniroma3.siw.model;
+package it.uniroma3.siw.model.tables;
 
+import java.time.LocalDate;
+
+import it.uniroma3.siw.model.enums.Roles;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,7 +12,7 @@ import jakarta.persistence.Id;
 
 
 @Entity
-public class User {
+public class Users {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,9 +27,24 @@ public class User {
 	@Column(nullable=false, length = 16, unique = true)
 	private String CF;  //CODICE FISCALE
 	
-	private int dateOfBirth; //In format MMDDYYYY
+	private LocalDate dateOfBirth;
+	
+	@Column(nullable = false)
+	private Roles role = Roles.USER;
 	
 	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public Roles getRole() {
+		return role;
+	}
+	public void setRole(Roles role) {
+		this.role = role;
+	}
 	public String getName() {
 		return name;
 	}
@@ -45,10 +63,10 @@ public class User {
 	public void setCF(String cF) {
 		CF = cF;
 	}
-	public int getDateOfBirth() {
+	public LocalDate getDateOfBirth() {
 		return dateOfBirth;
 	}
-	public void setDateOfBirth(int dateOfBirth) {
+	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 	
@@ -56,7 +74,7 @@ public class User {
 	public boolean equals(Object obj) {
 	    if (this == obj) return true;
 	    if (obj == null || getClass() != obj.getClass()) return false;
-	    User other = (User) obj;
+	    Users other = (Users) obj;
 	    return id != null && id.equals(other.id);
 	}
 
