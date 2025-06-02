@@ -1,7 +1,8 @@
-package it.uniroma3.siw.model;
+package it.uniroma3.siw.model.tables;
 
 import java.time.LocalDate;
 
+import it.uniroma3.siw.model.enums.Roles;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
