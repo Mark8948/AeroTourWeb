@@ -11,6 +11,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+//import jakarta.persistence.OneToOne;
 
 @Entity
 public class VisitsBooking {
@@ -18,7 +20,6 @@ public class VisitsBooking {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long Id;
-	
 	
 	private String guideName;
 	
@@ -31,7 +32,16 @@ public class VisitsBooking {
 	@Enumerated(EnumType.STRING)
 	private Status status = Status.IN_ATTESA_DI_CONFERMA;
 
+	@ManyToOne
+	private Users user;
 	
+	
+	public Users getUser() {
+		return user;
+	}
+	public void setUser(Users user) {
+		this.user = user;
+	}
 	public Long getId() {
 		return Id;
 	}

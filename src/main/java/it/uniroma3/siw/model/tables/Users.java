@@ -1,6 +1,7 @@
 package it.uniroma3.siw.model.tables;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import it.uniroma3.siw.model.enums.Roles;
 import jakarta.persistence.Column;
@@ -8,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 
 
@@ -32,7 +34,15 @@ public class Users {
 	@Column(nullable = false)
 	private Roles role = Roles.USER;
 	
+	@OneToMany(mappedBy = "user")
+	private List<VisitsBooking> bookings;
 	
+	public List<VisitsBooking> getBookings() {
+		return bookings;
+	}
+	public void setBookings(List<VisitsBooking> bookings) {
+		this.bookings = bookings;
+	}
 	public Long getId() {
 		return id;
 	}
