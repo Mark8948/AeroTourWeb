@@ -1,6 +1,7 @@
 package it.uniroma3.siw.model.tables;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,6 +16,7 @@ public class Credentials {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	//@Column(name = "credentials_id")  //ho bisogno che questa parte si chiami così per debuggare nel db
 	private Long id;
 	
 	@Column(nullable = false, unique = true)
@@ -26,7 +28,7 @@ public class Credentials {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Users user;
 	
-	@Enumerated
+	@Enumerated(EnumType.STRING) //serve a far apparire nel db l'enum come uno string e non numero.
 	@Column(nullable=false)
 	private Roles role; // = Roles.USER; OMETTO QUI E INSERISCO IL DEFAULT ROLE NEL COSTRUTTORE PER MIGLIORE SICUREZZA
 	
