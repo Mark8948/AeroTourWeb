@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import it.uniroma3.siw.model.enums.Status;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,93 +22,92 @@ import jakarta.persistence.JoinColumn;
 @Entity
 public class OrderRequest {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 
-    @ManyToOne(optional = false)
-    private Users user;
+	@ManyToOne(optional = false)
+	private Users user;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
+	@Column(nullable = false)
+	private LocalDateTime creationDate;
 
-    @Column(nullable = false, length = 25)
-    private String status;
+	@Enumerated(EnumType.STRING) // string in db invece che un numero
+	@Column(nullable = false, length = 25)
+	private Status stato;
 
-    // Riferimento al singolo aereo ordinato
-    @ManyToOne(optional = false)
-    private Airplane airplane;
+	public LocalDateTime getCreationDate() {
+		return creationDate;
+	}
 
-    // Lista delle modifiche applicate a questo aereo nell'ordine
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-        name = "list_modifications_applied",
-        joinColumns = @JoinColumn(name = "orderrequest_id"),
-        inverseJoinColumns = @JoinColumn(name = "customization_id")
-    )
-    private List<AirplaneCustomization> customizations = new ArrayList<>();
+	public void setCreationDate(LocalDateTime creationDate) {
+		this.creationDate = creationDate;
+	}
 
-    // equals e hashCode come prima
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof OrderRequest)) return false;
-        OrderRequest other = (OrderRequest) o;
-        return id != null && id.equals(other.id);
-    }
+	public Status getStato() {
+		return stato;
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+	public void setStato(Status stato) {
+		this.stato = stato;
+	}
 
-    // getters e setters
+	// Riferimento al singolo aereo ordinato
+	@ManyToOne(optional = false)
+	private Airplane airplane;
 
-    public Long getId() {
-        return id;
-    }
+	// Lista delle modifiche applicate a questo aereo nell'ordine
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "list_modifications_applied", joinColumns = @JoinColumn(name = "orderrequest_id"), inverseJoinColumns = @JoinColumn(name = "customization_id"))
+	private List<AirplaneCustomization> customizations = new ArrayList<>();
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	// equals e hashCode come prima
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (!(o instanceof OrderRequest))
+			return false;
+		OrderRequest other = (OrderRequest) o;
+		return id != null && id.equals(other.id);
+	}
 
-    public Users getUser() {
-        return user;
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
 
-    public void setUser(Users user) {
-        this.user = user;
-    }
+	// getters e setters
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public String getStatus() {
-        return status;
-    }
+	public Users getUser() {
+		return user;
+	}
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+	public void setUser(Users user) {
+		this.user = user;
+	}
 
-    public Airplane getAirplane() {
-        return airplane;
-    }
+	public Airplane getAirplane() {
+		return airplane;
+	}
 
-    public void setAirplane(Airplane airplane) {
-        this.airplane = airplane;
-    }
+	public void setAirplane(Airplane airplane) {
+		this.airplane = airplane;
+	}
 
-    public List<AirplaneCustomization> getCustomizations() {
-        return customizations;
-    }
+	public List<AirplaneCustomization> getCustomizations() {
+		return customizations;
+	}
 
-    public void setCustomizations(List<AirplaneCustomization> customizations) {
-        this.customizations = customizations;
-    }
+	public void setCustomizations(List<AirplaneCustomization> customizations) {
+		this.customizations = customizations;
+	}
 }
