@@ -3,7 +3,7 @@ package it.uniroma3.siw.model.tables;
 import java.time.LocalDate;
 import java.util.List;
 
-import it.uniroma3.siw.model.enums.Roles;
+//import it.uniroma3.siw.model.enums.Roles;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,9 +31,6 @@ public class Users {
 	
 	private LocalDate dateOfBirth;
 	
-	@Column(nullable = false)
-	private Roles role = Roles.USER;
-	
 	@OneToMany(mappedBy = "user")
 	private List<VisitsBooking> bookings;
 	
@@ -48,12 +45,6 @@ public class Users {
 	}
 	public void setId(Long id) {
 		this.id = id;
-	}
-	public Roles getRole() {
-		return role;
-	}
-	public void setRole(Roles role) {
-		this.role = role;
 	}
 	public String getName() {
 		return name;
