@@ -7,5 +7,5 @@ import java.util.Optional;
 import it.uniroma3.siw.model.tables.VisitsBooking;
 
 public interface VisitsBookingRepository extends CrudRepository<VisitsBooking, Long>{
-	public Optional<VisitsBooking> findById(Long id);
+	//metodi personalizzati
 }
