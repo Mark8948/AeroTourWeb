@@ -13,33 +13,46 @@ import jakarta.persistence.Column;
 
 @Entity
 public class Credentials {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	//@Column(name = "credentials_id")  //ho bisogno che questa parte si chiami così per debuggare nel db
+	// @Column(name = "credentials_id") //ho bisogno che questa parte si chiami così
+	// per debuggare nel db
 	private Long id;
-	
+
 	@Column(nullable = false, unique = true)
 	private String username;
 
+	@Column(nullable = false, unique = true, length = 50)
+	private String email;
+
 	@Column(nullable = false)
 	private String password;
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
 	private Users user;
-	
-	@Enumerated(EnumType.STRING) //serve a far apparire nel db l'enum come uno string e non numero.
-	@Column(nullable=false)
-	private Roles role; // = Roles.USER; OMETTO QUI E INSERISCO IL DEFAULT ROLE NEL COSTRUTTORE PER MIGLIORE SICUREZZA
-	
-	
+
+	@Enumerated(EnumType.STRING) // serve a far apparire nel db l'enum come uno string e non numero.
+	@Column(nullable = false)
+	private Roles role; // = Roles.USER; OMETTO QUI E INSERISCO IL DEFAULT ROLE NEL COSTRUTTORE PER
+						// MIGLIORE SICUREZZA
+
 	public Credentials() {
 		this.role = Roles.USER;
 	}
-	
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public Roles getRole() {
 		return role;
 	}
+
 	public void setRole(Roles role) {
 		this.role = role;
 	}

@@ -16,7 +16,7 @@ public class AirplaneCustomization {
 	private Long id;
 	
 	@Column(nullable=false)
-	private String descriptionName;
+	private String modificationName;
 	
 	@Column(nullable = false, length = 2000)
 	private String description;
@@ -50,10 +50,10 @@ public class AirplaneCustomization {
 		this.id = id;
 	}
 	public String getDescriptionName() {
-		return descriptionName;
+		return modificationName;
 	}
-	public void setDescriptionName(String descriptionName) {
-		this.descriptionName = descriptionName;
+	public void setDescriptionName(String modificationName) {
+		this.modificationName= modificationName;
 	}
 	public String getUrlImage() {
 		return urlImage;
