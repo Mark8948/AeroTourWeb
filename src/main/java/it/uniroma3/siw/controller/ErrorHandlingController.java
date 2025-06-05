@@ -28,6 +28,6 @@ public class ErrorHandlingController implements ErrorController {
             }
         }
 
-        return "error/generic"; // fallback generico
+        return "error/genericError"; // fallback generico
     }
 }
