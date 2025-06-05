@@ -5,10 +5,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-public class HomeController {
+public class AdminPersonalAreaController {
 	
-	@GetMapping({"/", "home"})
+	@GetMapping("admin")
 	public String home(Model model) { //Model model serve a passare i dati alla home con tutti gli aerei.
-			return "homepage";
+			return "adminPersonalArea";
 	}
 }
