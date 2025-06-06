@@ -12,46 +12,50 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
-	@Autowired
-	private CustomUserDetailsService userDetailsService;
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
 
-	@Bean
-	public DaoAuthenticationProvider authenticationProvider() {
-	    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-	    authProvider.setUserDetailsService(userDetailsService);
-	    authProvider.setPasswordEncoder(passwordEncoder());
-	    return authProvider;
-	}
-	
+    @Autowired
+    private CustomOAuth2UserService customOAuth2UserService;
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            // Disabilita CSRF solo se necessario (attenzione)
             .csrf().disable()
-            
             .authorizeHttpRequests(authorize -> authorize
-                // Accesso libero a risorse statiche e pagine di registrazione e login
                 .requestMatchers("/register", "/login", "/css/**", "/js/**", "/images/**").permitAll()
-                // Tutto il resto richiede autenticazione
                 .anyRequest().authenticated()
             )
-            
             .formLogin(form -> form
-                .loginPage("/login")          // pagina di login custom
-                .defaultSuccessUrl("/", true) // pagina dopo login
+                .loginPage("/login")
+                .defaultSuccessUrl("/", true)
                 .permitAll()
             )
-            
+            .oauth2Login(oauth2 -> oauth2
+                .loginPage("/login")
+                .userInfoEndpoint(userInfo -> userInfo
+                    .userService(customOAuth2UserService)
+                )
+                .defaultSuccessUrl("/", true)
+            )
             .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout")
                 .permitAll()
-            );
+            )
+            .authenticationProvider(authenticationProvider());
 
         return http.build();
     }
 
-    // Usa BCrypt (più sicuro di SHA-1!)
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
