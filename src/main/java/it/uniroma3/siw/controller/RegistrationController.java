@@ -1,5 +1,8 @@
 package it.uniroma3.siw.controller;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,19 +16,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import it.uniroma3.siw.model.tables.Credentials;
 import it.uniroma3.siw.model.tables.Users;
 import it.uniroma3.siw.repository.CredentialsRepository;
-import it.uniroma3.siw.repository.UsersRepository;  
+import it.uniroma3.siw.repository.UsersRepository;
 
 @Controller
 public class RegistrationController {
 
+	@Autowired 
+	private PasswordEncoder passwordEncoder;
+	
     @Autowired
     private CredentialsRepository credentialsRepository;
 
     @Autowired
     private UsersRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     /**
      * GET /register: mostra il form di registrazione.
@@ -88,4 +91,6 @@ public class RegistrationController {
 
         return "redirect:/login?registered=true";
     }
+
+    
 }
