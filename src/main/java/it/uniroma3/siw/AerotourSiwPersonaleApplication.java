@@ -36,6 +36,7 @@ public class AerotourSiwPersonaleApplication implements CommandLineRunner {
 		
 		credential.setRole(Roles.SERVER_ADMINISTRATOR);
 		credential.setPassword("admin");
+		credential.setEmail("mar.altamura2@stud.uniroma3.it");
 		credential.setUser(users);
 		credential.setUsername("admin");
 		
