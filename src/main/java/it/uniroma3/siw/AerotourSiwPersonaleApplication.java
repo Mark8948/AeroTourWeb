@@ -1,6 +1,6 @@
 package it.uniroma3.siw;
 
-import java.time.LocalDate;
+//import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -14,16 +14,16 @@ import it.uniroma3.siw.repository.CredentialsRepository;
 //import it.uniroma3.siw.repository.UsersRepository;
 
 @SpringBootApplication
-public class AerotourSiwPersonaleApplication implements CommandLineRunner {
+public class AerotourSiwPersonaleApplication {
 	
-	@Autowired
-	private CredentialsRepository credRepo;
+	//@Autowired
+	//private CredentialsRepository credRepo;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(AerotourSiwPersonaleApplication.class, args);
 	}
 	
-	@Override
+	/*@Override
 	public void run(String... args) throws Exception{
 		Users users = new Users();
 		Credentials credential = new Credentials();
@@ -31,8 +31,6 @@ public class AerotourSiwPersonaleApplication implements CommandLineRunner {
 		
 		users.setName("Marco");
 		users.setSurname("Altamura");
-		users.setCF("LTMMRC03M25H501Q");
-		users.setDateOfBirth(LocalDate.of(2003, 8, 25));
 		
 		credential.setRole(Roles.SERVER_ADMINISTRATOR);
 		credential.setPassword("admin");
@@ -43,6 +41,6 @@ public class AerotourSiwPersonaleApplication implements CommandLineRunner {
 		
 		//usersRepo.save(users);
 		credRepo.save(credential);
-	}
+	}*/
 
 }

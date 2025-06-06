@@ -1,0 +1,40 @@
+<!-- src/main/resources/templates/login.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <h1>Accedi</h1>
+
+    <!-- Mostro eventuali messaggi di errore -->
+    <div th:if="${param.error}" style="color: red;">
+        Username o password non validi!
+    </div>
+    <div th:if="${param.logout}" style="color: green;">
+        Hai fatto logout con successo.
+    </div>
+
+    <!-- Form per il login “a mano” -->
+    <form th:action="@{/login}" method="post">
+        <div>
+            <label>Username:</label>
+            <input type="text" name="username" autofocus />
+        </div>
+        <div>
+            <label>Password:</label>
+            <input type="password" name="password" />
+        </div>
+        <button type="submit">Accedi</button>
+    </form>
+
+    <hr/>
+
+    <!-- Link per il login con Google OAuth2 -->
+    <a th:href="@{/oauth2/authorization/google}">
+        <img src="/images/google_logo.png" alt="Google logo" style="height: 24px; vertical-align: middle;"/>
+        Accedi con Google
+    </a>
+</body>
+</html>
