@@ -1,14 +1,32 @@
 package it.uniroma3.siw.controller;
 
+import java.security.Principal;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import it.uniroma3.siw.model.tables.Airplane;
+import it.uniroma3.siw.service.AirplaneService;
+
 @Controller
 public class HomeController {
-	
-	@GetMapping({"/", "home"})
-	public String home(Model model) { //Model model serve a passare i dati alla home con tutti gli aerei.
-			return "homepage";
-	}
+
+    @Autowired
+    private AirplaneService airplaneService;
+
+    @GetMapping("/")
+    public String homepage(Model model, Principal principal) {
+        // 1) Lista aerei
+        List<Airplane> airplanes = airplaneService.getAllAirplanes();
+        model.addAttribute("airplanes", airplanes);
+
+        // 2) Username (se non è null)
+        if (principal != null) {
+            model.addAttribute("username", principal.getName());
+        }
+        return "homepage";
+    }
 }
