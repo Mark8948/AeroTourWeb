@@ -17,7 +17,8 @@ import it.uniroma3.siw.repository.UsersRepository;
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
-    @Autowired
+    @SuppressWarnings("unused")
+	@Autowired
     private CredentialsRepository credentialsRepository;
 
     @Autowired
@@ -26,7 +27,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) {
         OAuth2User oauth2User = super.loadUser(userRequest);
-
+        
         Map<String, Object> attributes = oauth2User.getAttributes();
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
 

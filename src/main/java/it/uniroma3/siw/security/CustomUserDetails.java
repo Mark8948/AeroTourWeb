@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import it.uniroma3.siw.model.tables.Credentials;
 import it.uniroma3.siw.model.tables.Users;
 
+@SuppressWarnings("serial")
 public class CustomUserDetails implements UserDetails {
 
     private final Credentials credentials;

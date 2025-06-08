@@ -19,16 +19,39 @@ public class SecurityConfig {
     private CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
+    DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
+        //authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+    @SuppressWarnings("removal")
+	@Bean
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    	return http
+        	//.csrf(Customizer.withDefaults())
+    		.csrf().disable()
+        	.authorizeHttpRequests(authorize -> {
+        		authorize.requestMatchers("/", "/contatti", "/homepage","/register", "/login", "/css/**", "/js/**", "/images/**").permitAll();
+        		authorize.anyRequest().authenticated();
+        	})
+        	.formLogin(form -> form
+                    .loginPage("/login")
+                    .defaultSuccessUrl("/", true)
+                    .permitAll()
+                )
+                .oauth2Login(oauth2 -> oauth2
+                    .loginPage("/login")
+                    .userInfoEndpoint(userInfo -> userInfo
+                        .userService(customOAuth2UserService)
+                    )
+                    .successHandler((requeste, response, autentication)->response.sendRedirect("/"))
+                )
+                .authenticationProvider(authenticationProvider())
+        	.build();
+        	
+        /*
             .csrf().disable()
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/", "/contatti", "/homepage","/register", "/login", "/css/**", "/js/**", "/images/**").permitAll()
@@ -52,12 +75,14 @@ public class SecurityConfig {
                 .permitAll()
             )
             .authenticationProvider(authenticationProvider());
+        
 
         return http.build();
+        */
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }

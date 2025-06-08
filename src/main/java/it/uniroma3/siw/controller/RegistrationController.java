@@ -1,8 +1,5 @@
 package it.uniroma3.siw.controller;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +42,8 @@ public class RegistrationController {
      */
     @PostMapping("/register")
     public String registerUser(
-            @ModelAttribute("userForm") Users userForm,
-            @ModelAttribute("credForm") Credentials credForm,
+            @ModelAttribute Users userForm,
+            @ModelAttribute Credentials credForm,
             Model model
     ) {
         // 1) Controllo che username non sia già in uso
