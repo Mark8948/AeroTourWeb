@@ -22,11 +22,7 @@ public class HomeController {
         // 1) Lista aerei
         List<Airplane> airplanes = airplaneService.getAllAirplanes();
         model.addAttribute("airplanes", airplanes);
-
-        // 2) Username (se non è null)
-        if (principal != null) {
-            model.addAttribute("username", principal.getName());
-        }
+        
         return "homepage";
     }
 }

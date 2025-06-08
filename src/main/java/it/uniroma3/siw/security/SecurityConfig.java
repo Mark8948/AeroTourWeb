@@ -26,14 +26,27 @@ public class SecurityConfig {
         return authProvider;
     }
 
-    @SuppressWarnings("removal")
+    //@SuppressWarnings("removal")
 	@Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     	return http
         	//.csrf(Customizer.withDefaults())
-    		.csrf().disable()
+    		//.csrf().disable()
         	.authorizeHttpRequests(authorize -> {
-        		authorize.requestMatchers("/", "/contatti", "/homepage","/register", "/login", "/css/**", "/js/**", "/images/**").permitAll();
+        		//authorize.anyRequest().permitAll();
+        		 authorize.requestMatchers(
+        		        "/",
+        		        "/contatti",
+        		        "/homepage",
+        		        "/register",
+        		        "/login",
+        		        "/css/**",
+        		        "/js/**",
+        		        "/images/**",
+        		        "/webjars/**",
+        		        "/favicon.ico"
+        		    ).permitAll();
+        		
         		authorize.anyRequest().authenticated();
         	})
         	.formLogin(form -> form
@@ -48,7 +61,13 @@ public class SecurityConfig {
                     )
                     .successHandler((requeste, response, autentication)->response.sendRedirect("/"))
                 )
-                .authenticationProvider(authenticationProvider())
+                
+           .logout(logout -> logout
+        		   .logoutUrl("/logout")
+        		   .logoutSuccessUrl("/")
+        		   .permitAll()
+        		   )
+            .authenticationProvider(authenticationProvider())
         	.build();
         	
         /*

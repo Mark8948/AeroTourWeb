@@ -5,54 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dove siamo - AeroTour</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #eef2f7;
-    }
-    header {
-      background: linear-gradient(90deg, #0066cc, #0052a3);
-      padding: 1rem 2rem;
-      color: white;
-      font-weight: bold;
-      font-size: 1.5rem;
-    }
-    h1 {
-      text-align: center;
-      color: #0052a3;
-      margin: 1.5rem 0;
-    }
-    #map {
-      height: 80vh;
-      width: 100%;
-      border: 3px solid #0052a3;
-      border-radius: 8px;
-      box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
-      margin-bottom: 2rem;
-    }
-    footer {
-      background-color: #004085;
-      padding: 1rem;
-      text-align: center;
-      color: white;
-    }
-    footer address {
-      font-style: normal;
-    }
-  </style>
+  <link rel="stylesheet" th:href="@{/css/map.css}" />
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
 
-  <header>AeroTour - Dove siamo</header>
+  <!-- <header>AeroTour - Dove siamo</header> -->
+  <!-- Include header -->
+  <div th:replace="fragments/header :: header"></div>
+  
   <h1>Ci trovi a Roma, in Via Vito Volterra 62</h1>
 
   <div id="map"></div>
 
-  <footer>
-    <p>Contatti: +39 0123 456789 | email@aereisito.com</p>
-    <address>Via Vito Volterra, 62<br>00146 Roma, Italia</address>
-  </footer>
+  <!-- Include footer -->
+  <div th:replace="fragments/footer :: footer"></div>
 
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
