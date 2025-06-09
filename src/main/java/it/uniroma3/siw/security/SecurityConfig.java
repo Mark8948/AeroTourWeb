@@ -26,47 +26,51 @@ public class SecurityConfig {
         return authProvider;
     }
 
-    //@SuppressWarnings("removal")
+    @SuppressWarnings("removal")
 	@Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     	return http
-        	.authorizeHttpRequests(authorize -> {
-        		//authorize.anyRequest().permitAll();
-        		 authorize.requestMatchers(
-        		        "/",
-        		        "/contatti",
-        		        "/homepage",
-        		        "/register",
-        		        "/login",
-        		        "/css/**",
-        		        "/js/**",
-        		        "/images/**",
-        		        "/webjars/**",
-        		        "/favicon.ico"
-        		    ).permitAll();
-        		
-        		authorize.anyRequest().authenticated();
-        	})
-        	.formLogin(form -> form
-                    .loginPage("/login")
-                    .defaultSuccessUrl("/", true)
-                    .permitAll()
+                .csrf().and()
+                .authorizeHttpRequests(authorize -> {
+                    //authorize.anyRequest().permitAll();
+                    authorize.requestMatchers(
+                            "/",
+                            "/contatti",
+                            "/homepage",
+                            "/register",
+                            "/login",
+                            "/css/**",
+                            "/js/**",
+                            "/images/**",
+                            "/webjars/**",
+                            "/favicon.ico"
+                    ).permitAll();
+
+                    authorize.anyRequest().authenticated();
+                })
+                .formLogin(form -> form
+                                .loginPage("/login")
+                                .defaultSuccessUrl("/", true)
+                                .permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                    .loginPage("/login")
-                    .userInfoEndpoint(userInfo -> userInfo
-                        .userService(customOAuth2UserService)
-                    )
-                    .successHandler((requeste, response, autentication)->response.sendRedirect("/"))
+                                .loginPage("/login")
+                                .userInfoEndpoint(userInfo -> userInfo
+                                                .userService(customOAuth2UserService)
+                                )
+                                .successHandler((requeste, response, autentication) -> response.sendRedirect("/"))
                 )
-                
-           .logout(logout -> logout
-        		   .logoutUrl("/logout")
-        		   .logoutSuccessUrl("/")
-        		   .permitAll()
-        		   )
-            .authenticationProvider(authenticationProvider())
-        	.build();
+
+                .logout(logout -> logout
+                                .logoutUrl("/logout")
+                                .invalidateHttpSession(true)
+                                .clearAuthentication(true)
+                                .deleteCookies("JSESSIONID")
+                                .logoutSuccessUrl("/")
+                                .permitAll()
+                )
+                .authenticationProvider(authenticationProvider())
+                .build();
         	
     }
 
