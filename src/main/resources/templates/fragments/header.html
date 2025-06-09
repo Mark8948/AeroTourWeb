@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<link rel="stylesheet" th:href="@{/css/style.css}" />
+    <meta charset="UTF-8">
+</head>
+<body>
+<header th:fragment="header">
+  <div class="logo">AeroTour</div>
+  <nav>
+    <a th:href="@{/}">Home</a>
+    <a th:href="@{/contatti}">Dove siamo</a>
+  </nav>
+  <div class="auth-buttons">
+    <a sec:authorize="isAnonymous()" th:href="@{/login}" class="btn">Login</a>
+    <div sec:authorize="isAuthenticated()">
+      <span class="btn" style="border:none; cursor:default;">
+        Benvenuto, <span th:text="${username}"></span>
+      </span>
+      <a th:href="@{/user}" class="btn">Entra nella tua area personale</a>
+      <form th:action="@{/logout}" method="post" style="display:inline;">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <button type="submit" class="btn">Logout</button>
+      </form>
+    </div>
+  </div>
+</header>
+</body>
+</html>

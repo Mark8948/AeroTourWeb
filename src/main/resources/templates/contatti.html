@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dove siamo - AeroTour</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" th:href="@{/css/map.css}" />
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+  <!-- <header>AeroTour - Dove siamo</header> -->
+  <!-- Include header -->
+  <div th:replace="fragments/header :: header"></div>
+  
+  <h1>Ci trovi a Roma, in Via Vito Volterra 62</h1>
+
+  <div id="map"></div>
+
+  <!-- Include footer -->
+  <div th:replace="fragments/footer :: footer"></div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const rome = [	41.854878, 12.470781  ]; // Coordinate della sede
+
+    const map = L.map('map').setView([42.0, 12.5], 6); // Italia centrale
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    const marker = L.marker(rome).addTo(map)
+      .bindPopup('<b>Sede AeroTour</b><br>Via Vito Volterra 62, Roma')
+      .openPopup();
+
+    // Animazione simulata: zoom progressivo verso la sede
+    let zoom = 6;
+    const zoomIn = setInterval(() => {
+      if (zoom < 16) {
+        zoom += 1;
+        map.setView(rome, zoom);
+      } else {
+        clearInterval(zoomIn);
+      }
+    }, 300);
+  </script>
+</body>
+</html>

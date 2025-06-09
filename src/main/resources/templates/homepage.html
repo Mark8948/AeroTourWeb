@@ -1,6 +1,32 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-	
+  <meta charset="UTF-8" />
+  <title>Homepage Aerei</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
-	<h1>HOMEPAGE</h1>
+
+<!-- Include header -->
+<div th:replace="fragments/header :: header"></div>
+
+<main>
+  <h1 style="text-align: center; margin-bottom: 2rem;">Benvenuti nei Cieli!</h1>
+  <section class="airplane-grid">
+    <div class="card" th:each="plane : ${airplanes}">
+      <img th:src="${plane.urlImage}" th:alt="${plane.modelName}" />
+      <div class="card-content">
+        <h3 th:text="${plane.modelName}"></h3>
+        <p th:text="'Descrizione: ' + ${plane.description}"></p>
+        <p class="price" th:text="${plane.price} + '€'"></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Include footer -->
+<div th:replace="fragments/footer :: footer"></div>
+
 </body>
+</html>

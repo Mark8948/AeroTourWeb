@@ -13,19 +13,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import it.uniroma3.siw.model.tables.Credentials;
 import it.uniroma3.siw.model.tables.Users;
 import it.uniroma3.siw.repository.CredentialsRepository;
-import it.uniroma3.siw.repository.UsersRepository;  
+import it.uniroma3.siw.repository.UsersRepository;
 
 @Controller
 public class RegistrationController {
 
+	@Autowired 
+	private PasswordEncoder passwordEncoder;
+	
     @Autowired
     private CredentialsRepository credentialsRepository;
 
     @Autowired
     private UsersRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     /**
      * GET /register: mostra il form di registrazione.
@@ -42,8 +42,8 @@ public class RegistrationController {
      */
     @PostMapping("/register")
     public String registerUser(
-            @ModelAttribute("userForm") Users userForm,
-            @ModelAttribute("credForm") Credentials credForm,
+            @ModelAttribute Users userForm,
+            @ModelAttribute Credentials credForm,
             Model model
     ) {
         // 1) Controllo che username non sia già in uso
@@ -88,4 +88,6 @@ public class RegistrationController {
 
         return "redirect:/login?registered=true";
     }
+
+    
 }
