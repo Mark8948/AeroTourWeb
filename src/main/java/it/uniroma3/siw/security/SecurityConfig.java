@@ -30,8 +30,6 @@ public class SecurityConfig {
 	@Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     	return http
-        	//.csrf(Customizer.withDefaults())
-    		//.csrf().disable()
         	.authorizeHttpRequests(authorize -> {
         		//authorize.anyRequest().permitAll();
         		 authorize.requestMatchers(
@@ -70,34 +68,6 @@ public class SecurityConfig {
             .authenticationProvider(authenticationProvider())
         	.build();
         	
-        /*
-            .csrf().disable()
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/", "/contatti", "/homepage","/register", "/login", "/css/**", "/js/**", "/images/**").permitAll()
-                .anyRequest().authenticated()
-            )
-            .formLogin(form -> form
-                .loginPage("/login")
-                .defaultSuccessUrl("/", true)
-                .permitAll()
-            )
-            .oauth2Login(oauth2 -> oauth2
-                .loginPage("/login")
-                .userInfoEndpoint(userInfo -> userInfo
-                    .userService(customOAuth2UserService)
-                )
-                .defaultSuccessUrl("/", true)
-            )
-            .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout")
-                .permitAll()
-            )
-            .authenticationProvider(authenticationProvider());
-        
-
-        return http.build();
-        */
     }
 
     @Bean

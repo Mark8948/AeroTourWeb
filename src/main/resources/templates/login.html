@@ -18,7 +18,7 @@
 	<p class="text-center text-gray-600">Effettua il login per accedere alla tua area personale</p>
 
     <!-- Login con form -->
-    <form method="post" action="/login" class="space-y-5">
+    <form th:action="@{/login}" method="post" sec:csrf="true" class="space-y-5">
         <div>
             <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
             <input type="text" name="username" id="username" required
