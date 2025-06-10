@@ -21,57 +21,64 @@ public class SecurityConfig {
     @Bean
     DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
-        //authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
 
-    @SuppressWarnings("removal")
-	@Bean
+    @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    	return http
-                .csrf().and()
-                .authorizeHttpRequests(authorize -> {
-                    //authorize.anyRequest().permitAll();
-                    authorize.requestMatchers(
-                            "/",
-                            "/contatti",
-                            "/homepage",
-                            "/register",
-                            "/login",
-                            "/css/**",
-                            "/js/**",
-                            "/images/**",
-                            "/webjars/**",
-                            "/favicon.ico"
-                    ).permitAll();
+        http
+            .authorizeHttpRequests(authorize -> {
+                // risorse pubbliche
+                authorize.requestMatchers(
+                    "/",
+                    "/contatti",
+                    "/homepage",
+                    "/register",
+                    "/login",
+                    "/css/**",
+                    "/js/**",
+                    "/images/**",
+                    "/webjars/**",
+                    "/favicon.ico"
+                ).permitAll();
 
-                    authorize.anyRequest().authenticated();
-                })
-                .formLogin(form -> form
-                                .loginPage("/login")
-                                .defaultSuccessUrl("/", true)
-                                .permitAll()
-                )
-                .oauth2Login(oauth2 -> oauth2
-                                .loginPage("/login")
-                                .userInfoEndpoint(userInfo -> userInfo
-                                                .userService(customOAuth2UserService)
-                                )
-                                .successHandler((requeste, response, autentication) -> response.sendRedirect("/"))
-                )
+                // area USER: solo ruolo USER
+                authorize.requestMatchers("/user/**")
+                         .hasRole("USER");
 
-                .logout(logout -> logout
-                                .logoutUrl("/logout")
-                                .invalidateHttpSession(true)
-                                .clearAuthentication(true)
-                                .deleteCookies("JSESSIONID")
-                                .logoutSuccessUrl("/")
-                                .permitAll()
+                // area ADMIN: solo ruolo SERVER_ADMINISTRATOR
+                authorize.requestMatchers("/admin/**")
+                         .hasRole("SERVER_ADMINISTRATOR");
+
+                // tutte le altre richieste richiedono autenticazione
+                authorize.anyRequest().authenticated();
+            })
+            .formLogin(form -> form
+                .loginPage("/login")
+                .defaultSuccessUrl("/", true)
+                .permitAll()
+            )
+            .oauth2Login(oauth2 -> oauth2
+                .loginPage("/login")
+                .userInfoEndpoint(userInfo -> userInfo
+                    .userService(customOAuth2UserService)
                 )
-                .authenticationProvider(authenticationProvider())
-                .build();
-        	
+                .successHandler((request, response, authentication) ->
+                    response.sendRedirect("/")
+                )
+            )
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .deleteCookies("JSESSIONID")
+                .logoutSuccessUrl("/")
+                .permitAll()
+            )
+            .authenticationProvider(authenticationProvider());
+
+        return http.build();
     }
 
     @Bean
