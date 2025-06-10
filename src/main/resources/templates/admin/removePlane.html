@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Rimuovi Aerei</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <style>
+        .airplane-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .remove-button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .remove-button:hover {
+            background-color: #a71d2a;
+        }
+
+        .airplane-info {
+            flex-grow: 1;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+
+<main>
+    <h1>Rimuovi Aerei dal Database</h1>
+
+    <div th:if="${airplaneRemovalSuccessMessage != null}">
+        <p th:text="${airplaneRemovalSuccessMessage}" style="color: green; font-weight: bold;"></p>
+    </div>
+
+    <div th:each="airplane : ${airplanes}" class="airplane-container">
+        <form th:action="@{'/admin/removePlane/' + ${airplane.id}}" method="get" 
+              onsubmit="return confirm('Vuoi veramente rimuovere questo aereo? Questa azione è irreversibile.');">
+            <button type="submit" class="remove-button">RIMUOVI</button>
+        </form>
+        <div class="airplane-info">
+            <strong th:text="${airplane.modelName}">Modello</strong> -
+            <span th:text="${airplane.description}">Descrizione</span> |
+            Anno: <span th:text="${airplane.buildYear}"></span> |
+            Prezzo: €<span th:text="${airplane.price}"></span>
+        </div>
+    </div>
+
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>
