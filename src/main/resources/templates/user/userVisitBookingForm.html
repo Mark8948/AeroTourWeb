@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Prenota Visita Guidata</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <style>
+    main.visit-booking {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    .visit-title {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #333;
+    }
+    .airplane-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .airplane-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      padding: 1.2rem 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      gap: 1rem;
+    }
+    .airplane-info {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      max-width: 70%;
+    }
+    .airplane-info h3 {
+      margin: 0 0 0.3rem 0;
+      color: #005f99;
+    }
+    .airplane-info p {
+      margin: 0.2rem 0;
+      color: #444;
+      font-size: 0.95rem;
+    }
+    .airplane-info span {
+      color: #666;
+      font-size: 0.9rem;
+    }
+    .airplane-image {
+      max-width: 200px;
+      max-height: 120px;
+      object-fit: contain;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .btn-book {
+      padding: 0.6rem 1.2rem;
+      background-color: #007acc;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+    }
+    .btn-book:hover {
+      background-color: #005fa3;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="fragments/header :: header"></div>
+
+<main class="visit-booking">
+  <h1 class="visit-title">Prenota una Visita Guidata</h1>
+
+  <div class="airplane-list">
+
+    <!-- Ciclo sugli aerei ricevuti dal backend -->
+    <div th:each="airplane : ${airplanes}" class="airplane-card">
+
+      <!-- Immagine solo se presente -->
+      <img th:if="${airplane.urlImage != null}" th:src="@{${airplane.urlImage}}" alt="Immagine aereo" class="airplane-image" />
+
+      <div class="airplane-info">
+        <h3 th:text="${airplane.modelName}">Nome Aereo</h3>
+        <p th:text="${airplane.description}">Descrizione aereo</p>
+        <span th:text="'Anno costruzione: ' + ${airplane.buildYear}">Anno costruzione</span><br/>
+        <span th:text="'Prezzo: €' + ${#numbers.formatDecimal(airplane.price, 1, 'COMMA', 2, 'POINT')}">Prezzo</span>
+      </div>
+
+	  <form th:action="@{/user/bookVisit}" method="post">
+	    <input type="hidden" name="airplaneId" th:value="${airplane.id}" />
+	    <button type="submit" class="btn-book">Prenota Visita</button>
+	  </form>
+
+
+    </div>
+
+  </div>
+</main>
+
+<!-- Footer -->
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

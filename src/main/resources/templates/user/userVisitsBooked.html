@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Visite Prenotate</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+    <h1>Le tue visite prenotate</h1>
+
+    <div th:if="${bookings == null or bookings.isEmpty()}">
+        <p>Non hai prenotato nessuna visita al momento.</p>
+    </div>
+
+    <div th:if="${bookings != null and !bookings.isEmpty()}">
+        <table>
+            <thead>
+                <tr>
+                    <th>Modello Aereo</th>
+                    <th>Immagine</th>
+                    <th>Stato</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="booking : ${bookings}">
+                    <!-- Nel model Airplane il getter è getModelName() -->
+                    <td th:text="${booking.airplane.modelName}">Modello</td>
+                    <td>
+                        <img th:if="${booking.airplane.urlImage != null}"
+                             th:src="${booking.airplane.urlImage}"
+                             alt="Immagine Aereo"
+                             style="max-width: 200px;">
+                    </td>
+                    <td th:text="${booking.status}">Stato</td>
+                    <td>
+                        <form th:action="@{'/user/cancelBooking/' + ${booking.id}}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <button type="submit" th:disabled="${booking.status.name() == 'ANNULLATO'}">
+                                Annulla
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

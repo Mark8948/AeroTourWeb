@@ -23,7 +23,7 @@ public class VisitsBooking {
 
 	private String guideName;
 
-	@Column(name = "visit_date_time", nullable = false)
+	@Column(name = "visit_date_time")
 	private LocalDateTime visitDateTime;
 
 	@Column(length = 10)
@@ -35,6 +35,18 @@ public class VisitsBooking {
 
 	@ManyToOne
 	private Users user;
+
+	@ManyToOne(optional = false)
+	private Airplane airplane;
+
+	// getter / setter
+	public Airplane getAirplane() {
+		return airplane;
+	}
+
+	public void setAirplane(Airplane airplane) {
+		this.airplane = airplane;
+	}
 
 	public Users getUser() {
 		return user;
