@@ -1,62 +1,144 @@
 package it.uniroma3.siw.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import it.uniroma3.siw.model.tables.Airplane;
-import it.uniroma3.siw.repository.AirplaneRepository;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * The AirplaneService gestisce la logica per l’entità Airplane.
- */
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import it.uniroma3.siw.model.tables.Airplane;
+import it.uniroma3.siw.model.tables.AirplaneCustomization;
+import it.uniroma3.siw.repository.AirplaneRepository;
+
 @Service
 public class AirplaneService {
 
     @Autowired
     protected AirplaneRepository airplaneRepository;
 
-    /**
-     * Recupera un Airplane dal DB in base al suo ID.
-     * 
-     * @param id l’ID dell’Airplane da recuperare
-     * @return l’Airplane recuperato, oppure null se non esiste
-     */
     @Transactional
     public Airplane getAirplane(Long id) {
         Optional<Airplane> result = this.airplaneRepository.findById(id);
         return result.orElse(null);
     }
 
-    /**
-     * Salva un Airplane nel DB.
-     * 
-     * @param airplane l’istanza di Airplane da salvare
-     * @return l’Airplane salvato
-     * @throws DataIntegrityViolationException se violato qualche vincolo (es. codice univoco già esistente)
-     */
     @Transactional
     public Airplane saveAirplane(Airplane airplane) {
         return this.airplaneRepository.save(airplane);
     }
 
-    /**
-     * Recupera tutti gli Airplane presenti nel DB.
-     * 
-     * @return una List contenente tutti gli Airplane
-     */
     @Transactional
     public List<Airplane> getAllAirplanes() {
         List<Airplane> result = new ArrayList<>();
-        Iterable<Airplane> iterable = this.airplaneRepository.findAll();
-        for (Airplane a : iterable) {
-            result.add(a);
-        }
+        this.airplaneRepository.findAll().forEach(result::add);
         return result;
+    }
+
+    @Transactional
+    public void deleteAirplane(Long id) {
+        this.airplaneRepository.deleteById(id);
+    }
+
+    @Transactional
+    public Airplane saveAirplaneWithCustomizations(
+            Airplane airplane,
+            List<Long> modificationIds,
+            List<String> names,
+            List<String> descriptions,
+            List<String> dates,
+            List<Float> prices,
+            List<String> urls) {
+
+        Airplane airplaneToSave;
+        if (airplane.getId() != null) {
+            airplaneToSave = this.airplaneRepository.findById(airplane.getId())
+                                .orElse(airplane);
+            // Aggiorna campi base
+            airplaneToSave.setModelName(airplane.getModelName());
+            airplaneToSave.setDescription(airplane.getDescription());
+            airplaneToSave.setBuildYear(airplane.getBuildYear());
+            airplaneToSave.setPrice(airplane.getPrice());
+            airplaneToSave.setUrlImage(airplane.getUrlImage());
+
+            // Se customizations è null inizializzala
+            if (airplaneToSave.getCustomizations() == null) {
+                airplaneToSave.setCustomizations(new ArrayList<>());
+            }
+
+            // Lista temporanea per customizzazioni aggiornate
+            List<AirplaneCustomization> updatedCustomizations = new ArrayList<>();
+
+            if (names != null) {
+                for (int i = 0; i < names.size(); i++) {
+                    AirplaneCustomization customization;
+
+                    // Se id esiste e valido, aggiorna l'esistente
+                    if (modificationIds != null && modificationIds.size() > i && modificationIds.get(i) != null) {
+                        Long modId = modificationIds.get(i);
+                        // Cerca la customization esistente nel database (o in airplaneToSave)
+                        customization = airplaneToSave.getCustomizations().stream()
+                            .filter(c -> c.getId() != null && c.getId().equals(modId))
+                            .findFirst()
+                            .orElse(new AirplaneCustomization());
+                        customization.setId(modId); // assicurati che ID sia settato
+                    } else {
+                        // Nuova customization
+                        customization = new AirplaneCustomization();
+                    }
+
+                    // Aggiorna campi
+                    customization.setModificationName(names.get(i));
+                    customization.setDescription(descriptions.get(i));
+                    customization.setModificationFirstAvailabilityDate(LocalDate.parse(dates.get(i)));
+                    customization.setModificationPrice(prices.get(i));
+                    customization.setUrlImage(urls.get(i));
+                    customization.setAirplane(airplaneToSave);
+
+                    updatedCustomizations.add(customization);
+                }
+            }
+
+            // Sostituisci le customizzazioni correnti con le aggiornate
+            airplaneToSave.getCustomizations().clear();
+            airplaneToSave.getCustomizations().addAll(updatedCustomizations);
+
+        } else {
+            // Caso nuovo aereo (inserimento)
+            airplaneToSave = airplane;
+
+            if (names != null) {
+                List<AirplaneCustomization> newCustomizations = new ArrayList<>();
+                for (int i = 0; i < names.size(); i++) {
+                    AirplaneCustomization customization = new AirplaneCustomization();
+                    customization.setModificationName(names.get(i));
+                    customization.setDescription(descriptions.get(i));
+                    customization.setModificationFirstAvailabilityDate(LocalDate.parse(dates.get(i)));
+                    customization.setModificationPrice(prices.get(i));
+                    customization.setUrlImage(urls.get(i));
+                    customization.setAirplane(airplaneToSave);
+                    newCustomizations.add(customization);
+                }
+                airplaneToSave.setCustomizations(newCustomizations);
+            }
+        }
+
+        return this.airplaneRepository.save(airplaneToSave);
+    }
+
+
+    @Transactional
+    public void addCustomizationToAirplane(Long airplaneId, AirplaneCustomization customization) {
+        Airplane airplane = airplaneRepository.findById(airplaneId)
+            .orElseThrow(() -> new IllegalArgumentException("Aereo non trovato"));
+
+        if (customization.getModificationPrice() < 0)
+            throw new IllegalArgumentException("Prezzo della modifica non valido");
+
+        customization.setAirplane(airplane); // relazione inversa
+        airplane.getCustomizations().add(customization);
+        airplaneRepository.save(airplane);
     }
 }

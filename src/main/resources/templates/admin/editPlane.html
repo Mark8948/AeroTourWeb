@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Modifica Aerei</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <style>
+        .airplane-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .edit-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .edit-button:hover {
+            background-color: #1e7e34;
+        }
+        .airplane-info {
+            flex-grow: 1;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main>
+    <h1>Modifica Aerei nel Database</h1>
+
+    <div th:if="${airplaneUpdateSuccessMessage != null}">
+        <p th:text="${airplaneUpdateSuccessMessage}" style="color: green; font-weight: bold;"></p>
+    </div>
+
+    <div th:each="airplane : ${airplanes}" class="airplane-container">
+        <!-- Bottone Modifica -->
+        <form th:action="@{'/admin/editPlane/' + ${airplane.id}}" method="get"
+              onsubmit="return confirm('Vuoi modificare questo aereo?');">
+            <button type="submit" class="edit-button">MODIFICA</button>
+        </form>
+        <div class="airplane-info">
+            <strong th:text="${airplane.modelName}">Modello</strong> -
+            <span th:text="${airplane.description}">Descrizione</span> |
+            Anno: <span th:text="${airplane.buildYear}"></span> |
+            Prezzo: €<span th:text="${airplane.price}"></span>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>
