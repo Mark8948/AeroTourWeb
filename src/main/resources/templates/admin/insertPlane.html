@@ -12,18 +12,15 @@
       padding: 20px;
       font-family: Arial, sans-serif;
     }
-
     h1 {
       text-align: center;
       margin-bottom: 30px;
     }
-
     form label {
       font-weight: bold;
       display: block;
       margin-top: 15px;
     }
-
     form input, form textarea {
       width: 100%;
       padding: 10px;
@@ -31,7 +28,6 @@
       border-radius: 5px;
       border: 1px solid #ccc;
     }
-
     .customizations {
       margin-top: 30px;
       padding: 15px;
@@ -39,7 +35,6 @@
       border-radius: 10px;
       background-color: #f9f9f9;
     }
-
     .customization-entry {
       margin-bottom: 10px;
       border: 1px solid #ddd;
@@ -47,7 +42,6 @@
       border-radius: 6px;
       background-color: #fff;
     }
-
     .add-custom-button, button[type="submit"] {
       margin-top: 20px;
       padding: 10px 20px;
@@ -58,14 +52,12 @@
       border-radius: 6px;
       cursor: pointer;
     }
-
     .add-custom-button:hover, button[type="submit"]:hover {
       background-color: #0056b3;
     }
-
     .back-button {
       position: fixed;
-      bottom: 200px;
+      bottom: 20px;
       left: 20px;
       background-color: #007bff;
       color: white;
@@ -77,7 +69,6 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.3);
       transition: background-color 0.2s ease;
     }
-
     .back-button:hover {
       background-color: #0056b3;
     }
@@ -85,12 +76,15 @@
 </head>
 <body>
 
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 
 <main>
   <h1>Inserisci un nuovo aereo</h1>
 
-  <form th:action="@{/admin/airplanes}" method="post" th:object="${airplane}">
+  <form id="insertPlaneForm"
+        th:action="@{/admin/airplanes}"
+        method="post"
+        th:object="${airplane}">
     <label for="modelName">Modello:</label>
     <input type="text" id="modelName" th:field="*{modelName}" required />
 
@@ -116,7 +110,6 @@
         <input type="text" id="modImg" placeholder="URL Immagine" />
         <button type="button" class="add-custom-button" onclick="addModification()">Aggiungi Modifica</button>
       </div>
-
       <div id="modList"></div>
     </div>
 
@@ -124,34 +117,46 @@
   </form>
 
   <script>
+    const form = document.getElementById("insertPlaneForm");
     const modList = document.getElementById("modList");
-    const mods = [];
+    let modsCount = 0;
 
     function addModification() {
-      const name = document.getElementById("modName").value;
-      const desc = document.getElementById("modDesc").value;
-      const date = document.getElementById("modDate").value;
+      const name  = document.getElementById("modName").value;
+      const desc  = document.getElementById("modDesc").value;
+      const date  = document.getElementById("modDate").value;
       const price = document.getElementById("modPrice").value;
-      const img = document.getElementById("modImg").value;
-
-      if (name && desc && date && price) {
-        const mod = { name, desc, date, price, img };
-        mods.push(mod);
-
-        const div = document.createElement("div");
-        div.className = "customization-entry";
-        div.innerHTML = `<strong>${name}</strong><br/>${desc}<br/>Disponibile da: ${date}<br/>Prezzo: €${price}`;
-        modList.appendChild(div);
-
-        // Clear inputs
-        document.getElementById("modName").value = "";
-        document.getElementById("modDesc").value = "";
-        document.getElementById("modDate").value = "";
-        document.getElementById("modPrice").value = "";
-        document.getElementById("modImg").value = "";
-      } else {
+      const img   = document.getElementById("modImg").value;
+      if (!name || !desc || !date || !price) {
         alert("Compila tutti i campi della modifica.");
+        return;
       }
+      // aggiunge hidden inputs al form
+      [
+        ["modificationNames",        name],
+        ["modificationDescriptions", desc],
+        ["modificationDates",        date],
+        ["modificationPrices",       price],
+        ["modificationUrls",         img]
+      ].forEach(([n,v])=>{
+        const input = document.createElement("input");
+        input.type  = "hidden";
+        input.name  = n;
+        input.value = v;
+        form.appendChild(input);
+      });
+      modsCount++;
+      // mostra entry
+      const div = document.createElement("div");
+      div.className = "customization-entry";
+      div.innerHTML = `<strong>${name}</strong><br/>
+                       ${desc}<br/>
+                       Disponibile da: ${date}<br/>
+                       Prezzo: €${price}`;
+      modList.appendChild(div);
+      // reset campi
+      ["modName","modDesc","modDate","modPrice","modImg"]
+       .forEach(id=>document.getElementById(id).value = "");
     }
   </script>
 
@@ -162,7 +167,7 @@
 
 <a th:href="@{/admin}" class="back-button">Torna alla tua area personale</a>
 
-<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 </html>

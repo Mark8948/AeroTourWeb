@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class AirplaneCustomization {
@@ -21,9 +23,15 @@ public class AirplaneCustomization {
 	@Column(nullable = false, length = 2000)
 	private String description;
 	
-	private LocalDate modificationFirstAvailabilityDate; //date since when a modification is available to purchase in format DDMMYYYY.
+	private LocalDate modificationFirstAvailabilityDate;
 	private float modificationPrice;
 	private String urlImage;
+	
+	
+	@ManyToOne
+	@JoinColumn(name = "airplane_id")  // nome della colonna FK nella tabella AirplaneCustomization
+	private Airplane airplane;
+	
 	
 	public String getDescription() {
 		return description;

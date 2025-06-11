@@ -2,12 +2,16 @@ package it.uniroma3.siw.model.tables;
 
 //import java.time.LocalDate;
 import java.time.Year;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 //import java.util.Objects;
 
@@ -32,6 +36,13 @@ public class Airplane {
     
     private float price;
     
+    
+	
+	@OneToMany(mappedBy="airplane" , cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<AirplaneCustomization> customizations = new ArrayList<>();
+
+	
+    
     // ====================
     // equals() / hashCode()
     // ====================
@@ -42,7 +53,8 @@ public class Airplane {
         Airplane airplane = (Airplane) o;
         return id != null && id.equals(airplane.id);
     }
-    @Override
+    
+	@Override
     public int hashCode() {
         return 31;
     }
@@ -56,6 +68,12 @@ public class Airplane {
     public void setId(Long id) {
         this.id = id;
     }
+    public List<AirplaneCustomization> getCustomizations() {
+		return customizations;
+	}
+	public void setCustomizations(List<AirplaneCustomization> customizations) {
+		this.customizations = customizations;
+	}
     public String getModelName() {
         return modelName;
     }

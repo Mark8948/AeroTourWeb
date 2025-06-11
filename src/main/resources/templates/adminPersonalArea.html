@@ -12,11 +12,9 @@
       padding: 20px;
       margin: 20px 0;
     }
-
     .section h2 {
       margin-top: 0;
     }
-
     .button-link {
       display: inline-block;
       padding: 10px 20px;
@@ -28,23 +26,26 @@
       transition: background-color 0.3s;
       margin: 10px 10px 0 0;
     }
-
     .button-link:hover {
       background-color: #0056b3;
     }
-
     .button-link-danger {
       background-color: #dc3545;
     }
-
     .button-link-danger:hover {
       background-color: #a71d2a;
+    }
+    .button-link-success {
+      background-color: #28a745;
+    }
+    .button-link-success:hover {
+      background-color: #1e7e34;
     }
   </style>
 </head>
 <body>
 
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 
 <main>
   <h1>ADMIN MANAGING AREA</h1>
@@ -52,8 +53,9 @@
   <!-- Sezione: Gestione Aerei -->
   <div class="section">
     <h2>Gestione Aerei nel Database</h2>
-    <a th:href="@{/admin/insertPlane}" class="button-link">Inserisci nuovo aereo nel database</a>
-    <a th:href="@{/admin/removePlane}" class="button-link button-link-danger">Rimuovi aereo dal database</a>
+    <a th:href="@{/admin/insertPlane}" class="button-link">Inserisci nuovo aereo</a>
+    <a th:href="@{/admin/removePlane}" class="button-link button-link-danger">Rimuovi aereo</a>
+    <a th:href="@{/admin/editPlane}" class="button-link button-link-success">Modifica aereo</a>
   </div>
 
   <!-- Sezione: Richieste Visite -->
@@ -70,7 +72,7 @@
 
 </main>
 
-<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 </html>
