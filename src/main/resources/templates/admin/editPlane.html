@@ -15,7 +15,7 @@
             margin-bottom: 10px;
         }
         .edit-button {
-            background-color: #28a745;   /* verde */
+            background-color: #28a745;
             color: white;
             border: none;
             padding: 8px 16px;
@@ -39,15 +39,14 @@
 <main>
     <h1>Modifica Aerei nel Database</h1>
 
-    <div th:if="${airplaneRemovalSuccessMessage != null}">
-        <p th:text="${airplaneRemovalSuccessMessage}" 
-           style="color: green; font-weight: bold;"></p>
+    <div th:if="${airplaneUpdateSuccessMessage != null}">
+        <p th:text="${airplaneUpdateSuccessMessage}" style="color: green; font-weight: bold;"></p>
     </div>
 
     <div th:each="airplane : ${airplanes}" class="airplane-container">
         <!-- Bottone Modifica -->
         <form th:action="@{'/admin/editPlane/' + ${airplane.id}}" method="get"
-              onsubmit="return confirm('Vuoi veramente modificare questo aereo?');">
+              onsubmit="return confirm('Vuoi modificare questo aereo?');">
             <button type="submit" class="edit-button">MODIFICA</button>
         </form>
         <div class="airplane-info">
@@ -57,7 +56,6 @@
             Prezzo: €<span th:text="${airplane.price}"></span>
         </div>
     </div>
-
 </main>
 
 <div th:replace="~{fragments/footer :: footer}"></div>

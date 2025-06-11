@@ -132,19 +132,19 @@
         return;
       }
       // aggiunge hidden inputs al form
-      [
-        ["modificationNames",        name],
-        ["modificationDescriptions", desc],
-        ["modificationDates",        date],
-        ["modificationPrices",       price],
-        ["modificationUrls",         img]
-      ].forEach(([n,v])=>{
-        const input = document.createElement("input");
-        input.type  = "hidden";
-        input.name  = n;
-        input.value = v;
-        form.appendChild(input);
-      });
+	  [
+	    ["modificationNames",        name],
+	    ["modificationDescriptions", desc],
+	    ["modificationDates",        date],
+	    ["modificationPrices",       price],
+	    ["modificationUrls",         img]
+	  ].forEach(([n,v])=>{
+	    const input = document.createElement("input");
+	    input.type  = "hidden";
+		input.name  = n;  // <-- qui l'indice per l'iterazione
+	    input.value = v;
+	    form.appendChild(input);
+	  });
       modsCount++;
       // mostra entry
       const div = document.createElement("div");

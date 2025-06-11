@@ -1,7 +1,7 @@
 package it.uniroma3.siw.model.tables;
 
 //import java.time.LocalDate;
-import java.time.Year;
+//import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class Airplane {
     @Column(length = 2000, nullable = false)
     private String description;
     
-    private Year buildYear;
+    private Integer buildYear;
     
     @Column(name="url_image")
     private String urlImage;
@@ -86,10 +86,10 @@ public class Airplane {
     public void setDescription(String description) {
         this.description = description;
     }
-    public Year getBuildYear() {
+    public Integer getBuildYear() {
         return buildYear;
     }
-    public void setBuildYear(Year buildYear) {
+    public void setBuildYear(Integer buildYear) {
         this.buildYear = buildYear;
     }
     public String getUrlImage() {

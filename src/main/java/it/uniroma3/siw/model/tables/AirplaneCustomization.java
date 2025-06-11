@@ -57,17 +57,25 @@ public class AirplaneCustomization {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getDescriptionName() {
-		return modificationName;
+	public String getModificationName() {
+	    return modificationName;
 	}
-	public void setDescriptionName(String modificationName) {
-		this.modificationName= modificationName;
+	public void setModificationName(String modificationName) {
+	    this.modificationName = modificationName;
 	}
+
 	public String getUrlImage() {
 		return urlImage;
 	}
 	public void setUrlImage(String urlImage) {
 		this.urlImage = urlImage;
 	}
+	public Airplane getAirplane() {
+		return airplane;
+	}
+	public void setAirplane(Airplane airplane) {
+		this.airplane = airplane;
+	}
+	
 	
 }

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Modifica Aereo</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 0; }
+    main { max-width: 900px; margin: 0 auto; padding: 20px; }
+    label { display: block; margin-top: 15px; font-weight: bold; }
+    input, textarea { width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; }
+
+    .section { margin-top: 40px; padding: 20px; background: #f7f7f7; border-radius: 10px; }
+    .custom-entry, .new-entry { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+    
+    .button { margin-top: 20px; padding: 10px 20px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    .button:hover { background-color: #0056b3; }
+  </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main>
+  <h1>Modifica Aereo</h1>
+
+  <form id="editPlaneForm"
+        th:action="@{'/admin/editPlane/' + ${airplane.id}}"
+        method="post"
+        th:object="${airplane}">
+
+    <!-- Dati Aereo -->
+    <div class="section">
+      <label>Modello:</label>
+      <input type="text" th:field="*{modelName}" required>
+
+      <label>Descrizione:</label>
+      <textarea th:field="*{description}" required></textarea>
+
+      <label>Anno di costruzione:</label>
+      <input type="number" th:field="*{buildYear}" min="1900" max="2100" required>
+
+      <label>Prezzo (€):</label>
+      <input type="number" th:field="*{price}" step="0.01" required>
+
+      <label>URL Immagine:</label>
+      <input type="text" th:field="*{urlImage}">
+    </div>
+
+    <!-- Modifiche esistenti -->
+    <div class="section" th:if="${#lists.isNotEmpty(airplane.customizations)}">
+      <h3>Modifiche Esistenti</h3>
+      <div th:each="mod : ${airplane.customizations}" class="custom-entry">
+        <input type="hidden" name="modificationIds" th:value="${mod.id}">
+        <label>Nome:</label>
+        <input type="text" name="modificationNames" th:value="${mod.name}" required>
+        <label>Descrizione:</label>
+        <input type="text" name="modificationDescriptions" th:value="${mod.description}" required>
+        <label>Disponibile da:</label>
+        <input type="date" name="modificationDates" th:value="${mod.availableFrom}" required>
+        <label>Prezzo:</label>
+        <input type="number" name="modificationPrices" th:value="${mod.price}" step="0.01" required>
+        <label>URL Immagine:</label>
+        <input type="text" name="modificationUrls" th:value="${mod.imageUrl}">
+      </div>
+    </div>
+
+    <!-- Nuove modifiche -->
+    <div class="section">
+      <h3>Aggiungi Nuova Modifica</h3>
+      <div class="new-entry">
+        <input type="text" id="newModName" placeholder="Nome modifica">
+        <input type="text" id="newModDesc" placeholder="Descrizione">
+        <input type="date" id="newModDate">
+        <input type="number" id="newModPrice" placeholder="Prezzo" step="0.01">
+        <input type="text" id="newModImg" placeholder="URL Immagine">
+        <button type="button" class="button" onclick="addNewModification()">Aggiungi</button>
+      </div>
+      <div id="newModList"></div>
+    </div>
+
+    <button type="submit" class="button">Salva Modifiche</button>
+  </form>
+
+  <script>
+    const form = document.getElementById("editPlaneForm");
+    const newModList = document.getElementById("newModList");
+
+    function addNewModification() {
+      const name = document.getElementById("newModName").value;
+      const desc = document.getElementById("newModDesc").value;
+      const date = document.getElementById("newModDate").value;
+      const price = document.getElementById("newModPrice").value;
+      const url = document.getElementById("newModImg").value;
+
+      if (!name || !desc || !date || !price) {
+        alert("Compila tutti i campi obbligatori.");
+        return;
+      }
+
+      // Aggiungi i campi nascosti al form
+      [["modificationNames", name],
+       ["modificationDescriptions", desc],
+       ["modificationDates", date],
+       ["modificationPrices", price],
+       ["modificationUrls", url]
+      ].forEach(([field, val]) => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = field;
+        input.value = val;
+        form.appendChild(input);
+      });
+
+      const div = document.createElement("div");
+      div.className = "custom-entry";
+      div.innerHTML = `<strong>${name}</strong><br>${desc}<br>Disponibile da: ${date}<br>Prezzo: €${price}`;
+      newModList.appendChild(div);
+
+      ["newModName", "newModDesc", "newModDate", "newModPrice", "newModImg"]
+        .forEach(id => document.getElementById(id).value = "");
+    }
+  </script>
+
+  <script th:inline="javascript" th:if="${airplaneUpdateSuccessMessage != null}">
+    alert("[[${airplaneUpdateSuccessMessage}]]");
+  </script>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

@@ -1,5 +1,6 @@
 package it.uniroma3.siw.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,53 +31,79 @@ public class AdminPersonalAreaController {
         return "admin/insertPlane";
     }
     
+    @GetMapping("/admin/editPlanes")
+    public String showEditPlanesList(Model model,
+                                     @ModelAttribute("airplaneUpdateSuccessMessage") String msg) {
+        model.addAttribute("airplanes", airplaneService.getAllAirplanes());
+        if (msg != null && !msg.isEmpty()) {
+            model.addAttribute("airplaneUpdateSuccessMessage", msg);
+        }
+        return "admin/editPlane"; // usa la pagina editPlane.html
+    }
+    
+    
+    // Mostra form modifica aereo
     @GetMapping("/admin/editPlane/{id}")
     public String showEditPlaneForm(@PathVariable Long id, Model model) {
         Airplane airplane = airplaneService.getAirplane(id);
+
+        // Assicurati che la lista customizations non sia null
+        if (airplane.getCustomizations() == null) {
+            airplane.setCustomizations(new ArrayList<>());
+        }
+
         model.addAttribute("airplane", airplane);
-        return "admin/insertPlane";  // stesso template del form di inserimento
+        return "admin/editPlaneForm";  // la pagina di modifica singola aereo
     }
+
+
+
+
+
     
-    @PostMapping("/admin/airplanes/{id}")
+    @PostMapping("/editPlane/{id}")
     public String updateAirplane(
             @PathVariable Long id,
             @ModelAttribute("airplane") Airplane airplane,
-            @RequestParam(value = "modificationNames",        required = false) List<String> names,
+            @RequestParam(value = "modificationIds", required = false) List<Long> modIds,
+            @RequestParam(value = "modificationNames", required = false) List<String> names,
             @RequestParam(value = "modificationDescriptions", required = false) List<String> descs,
-            @RequestParam(value = "modificationDates",        required = false) List<String> dates,
-            @RequestParam(value = "modificationPrices",       required = false) List<Float>  prices,
-            @RequestParam(value = "modificationUrls",         required = false) List<String> urls,
+            @RequestParam(value = "modificationDates", required = false) List<String> dates,
+            @RequestParam(value = "modificationPrices", required = false) List<Float> prices,
+            @RequestParam(value = "modificationUrls", required = false) List<String> urls,
             RedirectAttributes redirectAttributes) {
 
-        // 1) Imposta l’ID per forzare l’update anziché insert
         airplane.setId(id);
 
-        // 2) Validazione delle liste di customizzazioni
+        // Validazione delle liste delle modifiche: devono essere tutte presenti e della stessa dimensione se non null
         if (names != null) {
             int count = names.size();
-            if ((descs == null  || descs.size()  < count) ||
-                (dates == null  || dates.size()  < count) ||
+            if ((modIds != null && modIds.size() != count) ||
+                (descs == null || descs.size() < count) ||
+                (dates == null || dates.size() < count) ||
                 (prices == null || prices.size() < count) ||
-                (urls == null   || urls.size()   < count)) {
-                throw new IllegalArgumentException("Liste delle modifiche incoerenti");
+                (urls == null || urls.size() < count)) {
+                throw new IllegalArgumentException("Liste delle modifiche incoerenti o incomplete.");
             }
         }
 
-        // 3) Salvo con customizzazioni
+        // Chiamata al servizio per salvare l'aereo e le personalizzazioni aggiornate
         Airplane updated = airplaneService.saveAirplaneWithCustomizations(
-            airplane, names, descs, dates, prices, urls
+                airplane,
+                modIds,        // aggiunto per aggiornare modifiche esistenti con id
+                names,
+                descs,
+                dates,
+                prices,
+                urls
         );
 
-        // 4) Aggiungo messaggio di conferma
-        redirectAttributes.addFlashAttribute("airplaneInsertionSuccessMessage",
-            "Aereo modificato con successo: " 
-            + updated.getModelName() 
-            + " [ID: " + updated.getId() + "]"
-        );
+        redirectAttributes.addFlashAttribute("airplaneUpdateSuccessMessage",
+                "Aereo aggiornato con successo: " + updated.getModelName() + " [ID: " + updated.getId() + "]");
 
-        // 5) Redirect alla pagina di modifica dello stesso aereo
-        return "redirect:/admin/editPlane/" + updated.getId();
+        return "redirect:/admin/editPlanes";
     }
+
 
 
 
@@ -84,6 +111,7 @@ public class AdminPersonalAreaController {
     @PostMapping("/admin/airplanes")
     public String saveAirplane(
             @ModelAttribute("airplane") Airplane airplane,
+            @RequestParam(value = "modificationIds",          required = false) List<Long> modificationIds,
             @RequestParam(value = "modificationNames",        required = false) List<String> names,
             @RequestParam(value = "modificationDescriptions", required = false) List<String> descs,
             @RequestParam(value = "modificationDates",        required = false) List<String> dates,
@@ -91,21 +119,21 @@ public class AdminPersonalAreaController {
             @RequestParam(value = "modificationUrls",         required = false) List<String> urls,
             RedirectAttributes redirectAttributes) {
 
-        // Calcola quanti set completi di campi hai
         int count = 0;
         if (names != null) {
             count = names.size();
-            // verifica che tutte le altre liste abbiano almeno 'count' elementi
             if ((descs == null || descs.size() < count)
              || (dates == null || dates.size() < count)
              || (prices == null || prices.size() < count)
-             || (urls   == null || urls.size()   < count)) {
+             || (urls == null || urls.size() < count)) {
                 throw new IllegalArgumentException("Liste delle modifiche incoerenti");
             }
+            // Facoltativo: puoi anche controllare che modificationIds abbia count elementi o sia null
         }
 
         Airplane saved = airplaneService.saveAirplaneWithCustomizations(
             airplane,
+            modificationIds,
             names, descs, dates, prices, urls
         );
 
@@ -113,6 +141,7 @@ public class AdminPersonalAreaController {
             "Inserimento riuscito: " + saved.getModelName() + " [ID:" + saved.getId() + "]");
         return "redirect:/admin/insertPlane";
     }
+
 
 
     // Pagina per rimuovere un aereo
