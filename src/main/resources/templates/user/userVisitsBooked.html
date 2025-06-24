@@ -5,12 +5,11 @@
     <title>Visite Prenotate</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
     <style>
-      /* Container principale */
       .container {
         max-width: 900px;
         margin: 2rem auto;
         padding: 1rem;
-        min-height: 100vh; /* Per spingere il footer in fondo */
+        min-height: 100vh;
         box-sizing: border-box;
       }
       h1 {
@@ -18,7 +17,6 @@
         margin-bottom: 1.5rem;
         color: #2c3e50;
       }
-      /* Tabella prenotazioni */
       table {
         width: 100%;
         border-collapse: collapse;
@@ -43,7 +41,6 @@
         max-width: 120px;
         border-radius: 4px;
       }
-      /* Pulsante Annulla */
       .btn-cancel {
         padding: 0.4rem 0.8rem;
         background-color: #e74c3c;
@@ -98,8 +95,14 @@
               dd/MM/yyyy HH:mm
             </td>
             <td th:text="${booking.status}">Stato</td>
-            <td class="text-center">N.D.</td>
-            <td class="text-center">N.D.</td>
+            <td class="text-center"
+                th:text="${booking.status.name() == 'CONFERMATO' && booking.guideSurname != null ? booking.guideSurname : 'N.D.'}">
+              N.D.
+            </td>
+            <td class="text-center"
+                th:text="${booking.status.name() == 'CONFERMATO' && booking.guidePhone != null ? booking.guidePhone : 'N.D.'}">
+              N.D.
+            </td>
             <td class="text-center">
               <form th:action="@{'/user/cancelBooking/' + ${booking.id}}"
                     method="post">
