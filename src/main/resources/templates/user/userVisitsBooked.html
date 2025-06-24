@@ -1,51 +1,128 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
 <head>
     <meta charset="UTF-8">
     <title>Visite Prenotate</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <style>
+      /* Container principale */
+      .container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 1rem;
+        min-height: 100vh; /* Per spingere il footer in fondo */
+        box-sizing: border-box;
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #2c3e50;
+      }
+      /* Tabella prenotazioni */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+      }
+      th, td {
+        padding: 0.75rem 1rem;
+        border: 1px solid #ddd;
+      }
+      th {
+        background-color: #2980b9;
+        color: white;
+        text-align: left;
+      }
+      tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+      tbody tr:hover {
+        background-color: #eef6fb;
+      }
+      td img {
+        max-width: 120px;
+        border-radius: 4px;
+      }
+      /* Pulsante Annulla */
+      .btn-cancel {
+        padding: 0.4rem 0.8rem;
+        background-color: #e74c3c;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .btn-cancel:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+      .text-center {
+        text-align: center;
+      }
+    </style>
 </head>
 <body>
 
+  <!-- Header -->
+  <div th:replace="fragments/header :: header"></div>
+
+  <div class="container">
     <h1>Le tue visite prenotate</h1>
 
-    <div th:if="${bookings == null or bookings.isEmpty()}">
-        <p>Non hai prenotato nessuna visita al momento.</p>
-    </div>
+    <section th:if="${bookings == null or bookings.isEmpty()}">
+      <p class="text-center">Non hai prenotato nessuna visita al momento.</p>
+    </section>
 
-    <div th:if="${bookings != null and !bookings.isEmpty()}">
-        <table>
-            <thead>
-                <tr>
-                    <th>Modello Aereo</th>
-                    <th>Immagine</th>
-                    <th>Stato</th>
-                    <th>Azioni</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="booking : ${bookings}">
-                    <!-- Nel model Airplane il getter è getModelName() -->
-                    <td th:text="${booking.airplane.modelName}">Modello</td>
-                    <td>
-                        <img th:if="${booking.airplane.urlImage != null}"
-                             th:src="${booking.airplane.urlImage}"
-                             alt="Immagine Aereo"
-                             style="max-width: 200px;">
-                    </td>
-                    <td th:text="${booking.status}">Stato</td>
-                    <td>
-                        <form th:action="@{'/user/cancelBooking/' + ${booking.id}}" method="post">
-                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                            <button type="submit" th:disabled="${booking.status.name() == 'ANNULLATO'}">
-                                Annulla
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <section th:if="${bookings != null and !bookings.isEmpty()}">
+      <table>
+        <thead>
+          <tr>
+            <th>Modello Aereo</th>
+            <th>Immagine</th>
+            <th>Data Visita</th>
+            <th>Stato</th>
+            <th class="text-center">Nome Guida</th>
+            <th class="text-center">Telefono Guida</th>
+            <th class="text-center">Azioni</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="booking : ${bookings}">
+            <td th:text="${booking.airplane.modelName}">Modello</td>
+            <td class="text-center">
+              <img th:if="${booking.airplane.urlImage != null}"
+                   th:src="${booking.airplane.urlImage}"
+                   alt="Immagine Aereo">
+            </td>
+            <td th:text="${#temporals.format(booking.visitDateTime, 'dd/MM/yyyy HH:mm')}">
+              dd/MM/yyyy HH:mm
+            </td>
+            <td th:text="${booking.status}">Stato</td>
+            <td class="text-center">N.D.</td>
+            <td class="text-center">N.D.</td>
+            <td class="text-center">
+              <form th:action="@{'/user/cancelBooking/' + ${booking.id}}"
+                    method="post">
+                <input type="hidden"
+                       th:name="${_csrf.parameterName}"
+                       th:value="${_csrf.token}" />
+                <button type="submit"
+                        class="btn-cancel"
+                        th:disabled="${booking.status.name() == 'ANNULLATO' 
+                                     || booking.status.name() == 'RIFIUTATO'
+                                     || booking.status.name() == 'CONFERMATO'}">
+                  Annulla
+                </button>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <div th:replace="fragments/footer :: footer"></div>
 
 </body>
 </html>

@@ -45,7 +45,7 @@ public class SecurityConfig {
                 
                 //AREA DI SICUREZZA, DA QUI GESTISCO IL FATTO CHE NON POSSO DA USER ACCEDERE ALLA PAGINA ADMIN E VICEVERSA
                 .requestMatchers("/admin/**").hasRole("SERVER_ADMINISTRATOR")
-                .requestMatchers("/user/**").hasRole("USER")
+                //.requestMatchers("/user/**").hasRole("USER")
                 
                 .anyRequest().authenticated()
             )
