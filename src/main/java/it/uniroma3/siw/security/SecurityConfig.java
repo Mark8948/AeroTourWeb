@@ -40,7 +40,9 @@ public class SecurityConfig {
                 		"/login/**", 
                 		"/css/**", 
                 		"/js/**", 
-                		"/images/**").permitAll()
+                		"/images/**",
+                		"/contatti")	
+                	.permitAll()
                 
                 .anyRequest().authenticated()
             )
