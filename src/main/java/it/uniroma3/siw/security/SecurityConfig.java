@@ -40,6 +40,7 @@ public class SecurityConfig {
                 		"/js/**", 
                 		"/images/**",
                 		"/contatti",
+                		"/airplane/**", //Questo serve alle immagini degli aerei per essere caricate correttamente anche per utenti non loggati
                 		"/register")	
                 	.permitAll()
                 

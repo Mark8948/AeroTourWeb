@@ -1,19 +1,11 @@
 package it.uniroma3.siw.model.tables;
 
-//import java.time.LocalDate;
-//import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-//import java.util.Objects;
+import org.springframework.web.multipart.MultipartFile;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "airplanes")
@@ -28,11 +20,16 @@ public class Airplane {
 
 	@Column(length = 2000, nullable = false)
 	private String description;
-
+	
+	@Column
 	private Integer buildYear;
 
-	@Column(name = "url_image")
-	private String urlImage;
+	@Lob
+	@Column(nullable = true)
+	private byte[] image;
+	
+	 @Transient
+	 private MultipartFile imageFile; //Transiente per upload di immagini
 
 	private float price;
 
@@ -42,49 +39,16 @@ public class Airplane {
 	@OneToMany(mappedBy = "airplane", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<VisitsBooking> visitsBookings = new ArrayList<>();
 
-	public List<VisitsBooking> getVisitsBookings() {
-		return visitsBookings;
-	}
-
-	public void setVisitsBookings(List<VisitsBooking> visitsBookings) {
-		this.visitsBookings = visitsBookings;
-	}
-
-	// ====================
-	// equals() / hashCode()
-	// ====================
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
-		Airplane airplane = (Airplane) o;
-		return id != null && id.equals(airplane.id);
-	}
-
-	@Override
-	public int hashCode() {
-		return 31;
-	}
-
 	// ================
-	// getters / setters
+	// Getters / Setters
 	// ================
+
 	public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public List<AirplaneCustomization> getCustomizations() {
-		return customizations;
-	}
-
-	public void setCustomizations(List<AirplaneCustomization> customizations) {
-		this.customizations = customizations;
 	}
 
 	public String getModelName() {
@@ -111,12 +75,12 @@ public class Airplane {
 		this.buildYear = buildYear;
 	}
 
-	public String getUrlImage() {
-		return urlImage;
+	public byte[] getImage() {
+		return image;
 	}
 
-	public void setUrlImage(String urlImage) {
-		this.urlImage = urlImage;
+	public void setImage(byte[] image) {
+		this.image = image;
 	}
 
 	public float getPrice() {
@@ -125,5 +89,40 @@ public class Airplane {
 
 	public void setPrice(float price) {
 		this.price = price;
+	}
+
+	public List<AirplaneCustomization> getCustomizations() {
+		return customizations;
+	}
+
+	public void setCustomizations(List<AirplaneCustomization> customizations) {
+		this.customizations = customizations;
+	}
+
+	public List<VisitsBooking> getVisitsBookings() {
+		return visitsBookings;
+	}
+
+	public void setVisitsBookings(List<VisitsBooking> visitsBookings) {
+		this.visitsBookings = visitsBookings;
+	}
+
+	// ================
+	// equals / hashCode
+	// ================
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		Airplane airplane = (Airplane) o;
+		return id != null && id.equals(airplane.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return 31;
 	}
 }

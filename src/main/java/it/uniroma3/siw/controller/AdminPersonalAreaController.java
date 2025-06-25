@@ -1,5 +1,6 @@
 package it.uniroma3.siw.controller;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +10,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.uniroma3.siw.model.tables.Airplane;
-import it.uniroma3.siw.model.tables.VisitsBooking;
 import it.uniroma3.siw.service.AirplaneService;
 import it.uniroma3.siw.service.VisitsBookingService;
 
@@ -21,23 +22,21 @@ public class AdminPersonalAreaController {
 
     @Autowired
     private AirplaneService airplaneService;
-    
+
     @Autowired
     private VisitsBookingService visitsBookingService;
 
-    // Dashboard admin
     @GetMapping("/admin")
     public String adminDashboard() {
         return "adminPersonalArea";
     }
 
-    // Form inserimento aereo
     @GetMapping("/admin/insertPlane")
     public String showInsertPlaneForm(Model model) {
         model.addAttribute("airplane", new Airplane());
         return "admin/insertPlane";
     }
-    
+
     @GetMapping("/admin/editPlanes")
     public String showEditPlanesList(Model model,
                                      @ModelAttribute("airplaneUpdateSuccessMessage") String msg) {
@@ -45,29 +44,19 @@ public class AdminPersonalAreaController {
         if (msg != null && !msg.isEmpty()) {
             model.addAttribute("airplaneUpdateSuccessMessage", msg);
         }
-        return "admin/editPlane"; // usa la pagina editPlane.html
+        return "admin/editPlane";
     }
-    
-    
-    // Mostra form modifica aereo
+
     @GetMapping("/admin/editPlane/{id}")
     public String showEditPlaneForm(@PathVariable Long id, Model model) {
         Airplane airplane = airplaneService.getAirplane(id);
-
-        // Assicurati che la lista customizations non sia null
         if (airplane.getCustomizations() == null) {
             airplane.setCustomizations(new ArrayList<>());
         }
-
         model.addAttribute("airplane", airplane);
-        return "admin/editPlaneForm";  // la pagina di modifica singola aereo
+        return "admin/editPlaneForm";
     }
 
-
-
-
-
-    
     @PostMapping("/editPlane/{id}")
     public String updateAirplane(
             @PathVariable Long id,
@@ -77,32 +66,32 @@ public class AdminPersonalAreaController {
             @RequestParam(value = "modificationDescriptions", required = false) List<String> descs,
             @RequestParam(value = "modificationDates", required = false) List<String> dates,
             @RequestParam(value = "modificationPrices", required = false) List<Float> prices,
-            @RequestParam(value = "modificationUrls", required = false) List<String> urls,
-            RedirectAttributes redirectAttributes) {
+            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
+            RedirectAttributes redirectAttributes) throws IOException {
 
         airplane.setId(id);
 
-        // Validazione delle liste delle modifiche: devono essere tutte presenti e della stessa dimensione se non null
         if (names != null) {
             int count = names.size();
             if ((modIds != null && modIds.size() != count) ||
                 (descs == null || descs.size() < count) ||
                 (dates == null || dates.size() < count) ||
-                (prices == null || prices.size() < count) ||
-                (urls == null || urls.size() < count)) {
+                (prices == null || prices.size() < count)) {
                 throw new IllegalArgumentException("Liste delle modifiche incoerenti o incomplete.");
             }
         }
 
-        // Chiamata al servizio per salvare l'aereo e le personalizzazioni aggiornate
+        if (imageFile != null && !imageFile.isEmpty()) {
+            airplane.setImage(imageFile.getBytes());
+        }
+
         Airplane updated = airplaneService.saveAirplaneWithCustomizations(
                 airplane,
-                modIds,        // aggiunto per aggiornare modifiche esistenti con id
+                modIds,
                 names,
                 descs,
                 dates,
-                prices,
-                urls
+                prices
         );
 
         redirectAttributes.addFlashAttribute("airplaneUpdateSuccessMessage",
@@ -111,37 +100,35 @@ public class AdminPersonalAreaController {
         return "redirect:/admin/editPlanes";
     }
 
-
-
-
-    // Salvataggio aereo con eventuali personalizzazioni
     @PostMapping("/admin/airplanes")
     public String saveAirplane(
             @ModelAttribute("airplane") Airplane airplane,
-            @RequestParam(value = "modificationIds",          required = false) List<Long> modificationIds,
-            @RequestParam(value = "modificationNames",        required = false) List<String> names,
+            @RequestParam(value = "modificationIds", required = false) List<Long> modificationIds,
+            @RequestParam(value = "modificationNames", required = false) List<String> names,
             @RequestParam(value = "modificationDescriptions", required = false) List<String> descs,
-            @RequestParam(value = "modificationDates",        required = false) List<String> dates,
-            @RequestParam(value = "modificationPrices",       required = false) List<Float>  prices,
-            @RequestParam(value = "modificationUrls",         required = false) List<String> urls,
-            RedirectAttributes redirectAttributes) {
+            @RequestParam(value = "modificationDates", required = false) List<String> dates,
+            @RequestParam(value = "modificationPrices", required = false) List<Float> prices,
+            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
+            RedirectAttributes redirectAttributes) throws IOException {
 
         int count = 0;
         if (names != null) {
             count = names.size();
             if ((descs == null || descs.size() < count)
              || (dates == null || dates.size() < count)
-             || (prices == null || prices.size() < count)
-             || (urls == null || urls.size() < count)) {
+             || (prices == null || prices.size() < count)) {
                 throw new IllegalArgumentException("Liste delle modifiche incoerenti");
             }
-            // Facoltativo: puoi anche controllare che modificationIds abbia count elementi o sia null
+        }
+
+        if (imageFile != null && !imageFile.isEmpty()) {
+            airplane.setImage(imageFile.getBytes());
         }
 
         Airplane saved = airplaneService.saveAirplaneWithCustomizations(
             airplane,
             modificationIds,
-            names, descs, dates, prices, urls
+            names, descs, dates, prices
         );
 
         redirectAttributes.addFlashAttribute("airplaneInsertionSuccessMessage",
@@ -149,31 +136,25 @@ public class AdminPersonalAreaController {
         return "redirect:/admin/insertPlane";
     }
 
-
-
-    // Pagina per rimuovere un aereo
     @GetMapping("/admin/removePlane")
     public String showRemovePlanePage(Model model) {
         model.addAttribute("airplanes", airplaneService.getAllAirplanes());
         return "admin/removePlane";
     }
 
-    // Rimozione aereo
     @GetMapping("/admin/removePlane/{id}")
     public String removePlane(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         airplaneService.deleteAirplane(id);
         redirectAttributes.addFlashAttribute("airplaneRemovalSuccessMessage", "Aereo rimosso con successo [ID: " + id + "]");
         return "redirect:/admin/removePlane";
     }
-    
+
     @GetMapping("/admin/manageVisits")
     public String manageVisits(Model model) {
-    	//List<VisitsBooking> bookings = visitsBookingService.findAll();
-    	model.addAttribute("bookings", visitsBookingService.findAll());
-		return "/admin/manageVisits";
+        model.addAttribute("bookings", visitsBookingService.findAll());
+        return "/admin/manageVisits";
     }
-    
- // Conferma prenotazione
+
     @PostMapping("/admin/confirmBooking/{id}")
     public String confirmVisit(@PathVariable("id") Long id,
                                @RequestParam("guideSurname") String guideSurname,
@@ -183,7 +164,6 @@ public class AdminPersonalAreaController {
         return "redirect:/admin/manageVisits";
     }
 
-    // Rifiuta prenotazione
     @PostMapping("/admin/rejectBooking/{id}")
     public String rejectVisit(@PathVariable("id") Long id) {
         visitsBookingService.rejectBooking(id);

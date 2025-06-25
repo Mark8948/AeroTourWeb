@@ -49,64 +49,53 @@ public class AirplaneService {
             List<String> names,
             List<String> descriptions,
             List<String> dates,
-            List<Float> prices,
-            List<String> urls) {
+            List<Float> prices) {
 
         Airplane airplaneToSave;
         if (airplane.getId() != null) {
             airplaneToSave = this.airplaneRepository.findById(airplane.getId())
                                 .orElse(airplane);
-            // Aggiorna campi base
             airplaneToSave.setModelName(airplane.getModelName());
             airplaneToSave.setDescription(airplane.getDescription());
             airplaneToSave.setBuildYear(airplane.getBuildYear());
             airplaneToSave.setPrice(airplane.getPrice());
-            airplaneToSave.setUrlImage(airplane.getUrlImage());
+            airplaneToSave.setImage(airplane.getImage());
 
-            // Se customizations è null inizializzala
             if (airplaneToSave.getCustomizations() == null) {
                 airplaneToSave.setCustomizations(new ArrayList<>());
             }
 
-            // Lista temporanea per customizzazioni aggiornate
             List<AirplaneCustomization> updatedCustomizations = new ArrayList<>();
 
             if (names != null) {
                 for (int i = 0; i < names.size(); i++) {
                     AirplaneCustomization customization;
 
-                    // Se id esiste e valido, aggiorna l'esistente
                     if (modificationIds != null && modificationIds.size() > i && modificationIds.get(i) != null) {
                         Long modId = modificationIds.get(i);
-                        // Cerca la customization esistente nel database (o in airplaneToSave)
                         customization = airplaneToSave.getCustomizations().stream()
                             .filter(c -> c.getId() != null && c.getId().equals(modId))
                             .findFirst()
                             .orElse(new AirplaneCustomization());
-                        customization.setId(modId); // assicurati che ID sia settato
+                        customization.setId(modId);
                     } else {
-                        // Nuova customization
                         customization = new AirplaneCustomization();
                     }
 
-                    // Aggiorna campi
                     customization.setModificationName(names.get(i));
                     customization.setDescription(descriptions.get(i));
                     customization.setModificationFirstAvailabilityDate(LocalDate.parse(dates.get(i)));
                     customization.setModificationPrice(prices.get(i));
-                    customization.setUrlImage(urls.get(i));
                     customization.setAirplane(airplaneToSave);
 
                     updatedCustomizations.add(customization);
                 }
             }
 
-            // Sostituisci le customizzazioni correnti con le aggiornate
             airplaneToSave.getCustomizations().clear();
             airplaneToSave.getCustomizations().addAll(updatedCustomizations);
 
         } else {
-            // Caso nuovo aereo (inserimento)
             airplaneToSave = airplane;
 
             if (names != null) {
@@ -117,7 +106,6 @@ public class AirplaneService {
                     customization.setDescription(descriptions.get(i));
                     customization.setModificationFirstAvailabilityDate(LocalDate.parse(dates.get(i)));
                     customization.setModificationPrice(prices.get(i));
-                    customization.setUrlImage(urls.get(i));
                     customization.setAirplane(airplaneToSave);
                     newCustomizations.add(customization);
                 }
@@ -128,7 +116,6 @@ public class AirplaneService {
         return this.airplaneRepository.save(airplaneToSave);
     }
 
-
     @Transactional
     public void addCustomizationToAirplane(Long airplaneId, AirplaneCustomization customization) {
         Airplane airplane = airplaneRepository.findById(airplaneId)
@@ -137,7 +124,7 @@ public class AirplaneService {
         if (customization.getModificationPrice() < 0)
             throw new IllegalArgumentException("Prezzo della modifica non valido");
 
-        customization.setAirplane(airplane); // relazione inversa
+        customization.setAirplane(airplane);
         airplane.getCustomizations().add(customization);
         airplaneRepository.save(airplane);
     }
