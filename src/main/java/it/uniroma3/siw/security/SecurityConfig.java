@@ -1,13 +1,11 @@
 package it.uniroma3.siw.security;
 
-import it.uniroma3.siw.security.CustomOAuth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -18,21 +16,21 @@ public class SecurityConfig {
     @Autowired
     private CustomOAuth2UserService customOAuth2UserService;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    //@Autowired
+    //private UserDetailsService userDetailsService;
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+    AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
@@ -40,7 +38,14 @@ public class SecurityConfig {
                 		"/login/**", 
                 		"/css/**", 
                 		"/js/**", 
-                		"/images/**").permitAll()
+                		"/images/**",
+                		"/contatti",
+                		"/register")	
+                	.permitAll()
+                
+                //AREA DI SICUREZZA, DA QUI GESTISCO IL FATTO CHE NON POSSO DA USER ACCEDERE ALLA PAGINA ADMIN E VICEVERSA
+                .requestMatchers("/admin/**").hasRole("SERVER_ADMINISTRATOR")
+                //.requestMatchers("/user/**").hasRole("USER")
                 
                 .anyRequest().authenticated()
             )

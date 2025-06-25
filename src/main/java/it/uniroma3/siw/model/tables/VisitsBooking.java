@@ -21,13 +21,14 @@ public class VisitsBooking {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	private String guideName;
-
-	@Column(name = "visit_date_time", nullable = false)
+	@Column(name = "visit_date_time")
 	private LocalDateTime visitDateTime;
 
-	@Column(length = 10)
-	private Integer guideCellNumber;
+	@Column(name = "guide_surname", length = 100)
+	private String guideSurname;
+
+	@Column(name = "guide_phone", length = 20)
+	private String guidePhone;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
@@ -35,6 +36,18 @@ public class VisitsBooking {
 
 	@ManyToOne
 	private Users user;
+
+	@ManyToOne(optional = false)
+	private Airplane airplane;
+
+	// getter / setter
+	public Airplane getAirplane() {
+		return airplane;
+	}
+
+	public void setAirplane(Airplane airplane) {
+		this.airplane = airplane;
+	}
 
 	public Users getUser() {
 		return user;
@@ -52,12 +65,20 @@ public class VisitsBooking {
 		this.id = id;
 	}
 
-	public LocalDateTime getVisitDateTime() {
-		return visitDateTime;
+	public String getGuideSurname() {
+		return guideSurname;
 	}
 
-	public void setVisitDateTime(LocalDateTime visitDateTime) {
-		this.visitDateTime = visitDateTime;
+	public void setGuideSurname(String s) {
+		this.guideSurname = s;
+	}
+
+	public String getGuidePhone() {
+		return guidePhone;
+	}
+
+	public void setGuidePhone(String p) {
+		this.guidePhone = p;
 	}
 
 	public Status getStatus() {
@@ -68,19 +89,12 @@ public class VisitsBooking {
 		this.status = status;
 	}
 
-	public String getGuideName() {
-		return guideName;
+	public LocalDateTime getVisitDateTime() {
+		return visitDateTime;
 	}
 
-	public void setGuideName(String guideName) {
-		this.guideName = guideName;
+	public void setVisitDateTime(LocalDateTime visitDateTime) {
+		this.visitDateTime = visitDateTime;
 	}
 
-	public Integer getGuideCellNumber() {
-		return guideCellNumber;
-	}
-
-	public void setGuideCellNumber(Integer guideCellNumber) {
-		this.guideCellNumber = guideCellNumber;
-	}
 }

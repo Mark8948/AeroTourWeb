@@ -24,28 +24,32 @@
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    const rome = [	41.854878, 12.470781  ]; // Coordinate della sede
+	
+	// Punto target
+    const rome = [41.854878, 12.470781];
 
-    const map = L.map('map').setView([42.0, 12.5], 6); // Italia centrale
+    // 1) Vista iniziale “tutto Italia”
+    const map = L.map('map').setView([42.0, 12.5], 6);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+      attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    const marker = L.marker(rome).addTo(map)
+    L.marker(rome).addTo(map)
       .bindPopup('<b>Sede AeroTour</b><br>Via Vito Volterra 62, Roma')
       .openPopup();
 
-    // Animazione simulata: zoom progressivo verso la sede
-    let zoom = 6;
-    const zoomIn = setInterval(() => {
-      if (zoom < 16) {
-        zoom += 1;
-        map.setView(rome, zoom);
-      } else {
-        clearInterval(zoomIn);
-      }
-    }, 300);
+    // 2) Dopo 1.5s (o al caricamento dei tasselli) faccio partire lo zoom fluido
+    map.whenReady(() => {
+      setTimeout(() => {
+        map.flyTo(rome, 16, {
+          duration: 1.5,     // durata in secondi
+          easeLinearity: 0.5 
+        });
+      }, 1500); // pausa 1.5 secondi
+    });
   </script>
+
+
 </body>
 </html>

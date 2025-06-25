@@ -18,7 +18,7 @@ public class GlobalModelAttributes {
         String username = null;
 
         if (oauthUser != null) {
-            username = oauthUser.getAttribute("name"); // o "login" per GitHub
+            username = oauthUser.getAttribute("name");
         } else if (principal != null) {
             username = principal.getName();
         }

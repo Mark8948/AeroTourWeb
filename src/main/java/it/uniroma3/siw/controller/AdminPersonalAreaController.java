@@ -1,22 +1,29 @@
 package it.uniroma3.siw.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.uniroma3.siw.model.tables.Airplane;
+import it.uniroma3.siw.model.tables.VisitsBooking;
 import it.uniroma3.siw.service.AirplaneService;
+import it.uniroma3.siw.service.VisitsBookingService;
 
 @Controller
 public class AdminPersonalAreaController {
 
     @Autowired
     private AirplaneService airplaneService;
+    
+    @Autowired
+    private VisitsBookingService visitsBookingService;
 
     // Dashboard admin
     @GetMapping("/admin")
@@ -157,5 +164,29 @@ public class AdminPersonalAreaController {
         airplaneService.deleteAirplane(id);
         redirectAttributes.addFlashAttribute("airplaneRemovalSuccessMessage", "Aereo rimosso con successo [ID: " + id + "]");
         return "redirect:/admin/removePlane";
+    }
+    
+    @GetMapping("/admin/manageVisits")
+    public String manageVisits(Model model) {
+    	//List<VisitsBooking> bookings = visitsBookingService.findAll();
+    	model.addAttribute("bookings", visitsBookingService.findAll());
+		return "/admin/manageVisits";
+    }
+    
+ // Conferma prenotazione
+    @PostMapping("/admin/confirmBooking/{id}")
+    public String confirmVisit(@PathVariable("id") Long id,
+                               @RequestParam("guideSurname") String guideSurname,
+                               @RequestParam("guidePhone") String guidePhone,
+                               @RequestParam("confirmedDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime confirmedDateTime) {
+        visitsBookingService.confirmBooking(id, guideSurname, guidePhone, confirmedDateTime);
+        return "redirect:/admin/manageVisits";
+    }
+
+    // Rifiuta prenotazione
+    @PostMapping("/admin/rejectBooking/{id}")
+    public String rejectVisit(@PathVariable("id") Long id) {
+        visitsBookingService.rejectBooking(id);
+        return "redirect:/admin/manageVisits";
     }
 }

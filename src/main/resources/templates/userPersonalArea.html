@@ -3,7 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8" />
-  <title>USER PRIVATE AREA</title>
+  <title>Area Privata Utente</title>
   <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
@@ -11,10 +11,103 @@
 <!-- Include header -->
 <div th:replace="fragments/header :: header"></div>
 
-<main>
-  
-	
-	<h1>USER</h1>
+<style>
+	body {
+	  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	  background-color: #f4f6f8;
+	  margin: 0;
+	  padding: 0;
+	}
+
+	main.user-dashboard {
+	  max-width: 1200px;
+	  margin: 2rem auto;
+	  padding: 1rem;
+	}
+
+	.dashboard-title {
+	  text-align: center;
+	  margin-bottom: 2rem;
+	  color: #333;
+	}
+
+	.dashboard-grid {
+	  display: grid;
+	  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	  gap: 2rem;
+	}
+
+	.dashboard-card {
+	  background-color: #ffffff;
+	  border-radius: 12px;
+	  padding: 1.5rem;
+	  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+	  transition: transform 0.2s;
+	}
+
+	.dashboard-card:hover {
+	  transform: translateY(-5px);
+	}
+
+	.dashboard-card h2 {
+	  color: #005f99;
+	  margin-bottom: 0.5rem;
+	}
+
+	.dashboard-card p {
+	  margin-bottom: 1rem;
+	  color: #555;
+	}
+
+	.button-group {
+	  display: flex;
+	  flex-direction: column;
+	  gap: 0.75rem;
+	}
+
+	.btn {
+	  display: inline-block;
+	  text-align: center;
+	  padding: 0.75rem 1.2rem;
+	  background-color: #007acc;
+	  color: #fff;
+	  text-decoration: none;
+	  border-radius: 6px;
+	  font-weight: 600;
+	  transition: background-color 0.3s ease;
+	}
+
+	.btn:hover {
+	  background-color: #005fa3;
+	}
+</style>
+
+<main class="user-dashboard">
+  <h1 class="dashboard-title">Benvenuto nella tua area riservata</h1>
+
+  <div class="dashboard-grid">
+
+    <!-- Sezione Compra Aereo -->
+    <section class="dashboard-card">
+      <h2>Compra Aereo</h2>
+      <p>Scegli e acquista il tuo aereo personalizzato.</p>
+      <div class="button-group">
+        <a th:href="@{/user/newOrder}" class="btn">Crea un Ordine</a>
+        <a th:href="@{/user/orders}" class="btn">Visualizza Ordini Passati</a>
+      </div>
+    </section>
+
+    <!-- Sezione Prenota Visite Aereo -->
+    <section class="dashboard-card">
+      <h2>Prenota Visite Aereo</h2>
+      <p>Organizza una visita o controlla le prenotazioni effettuate.</p>
+      <div class="button-group">
+        <a th:href="@{/user/bookVisit}" class="btn">Prenota Visita</a>
+        <a th:href="@{/user/bookings}" class="btn">Visualizza Stato Prenotazioni</a>
+      </div>
+    </section>
+
+  </div>
 </main>
 
 <!-- Include footer -->
