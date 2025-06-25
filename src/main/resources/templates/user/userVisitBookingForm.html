@@ -6,49 +6,79 @@
     <title>Prenota Visita</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
     <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
         main {
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 1rem;
+            width: 100%;
+            padding: 2rem 3vw;
+            box-sizing: border-box;
         }
 
-        /* Solo form dentro main (non influenziamo altri form globali) */
-        main > form {
+        h2 {
+            text-align: center;
+            color: #2c3e50;
             margin-bottom: 2rem;
-            background: #f4f4f4;
-            padding: 1.5rem;
-            border-radius: 10px;
         }
 
-        /* Griglia di card */
         .airplane-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
         }
 
-        /* Card singola */
         .card {
-            border: 1px solid #ccc;
-            padding: 1rem;
-            border-radius: 10px;
             background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease;
         }
 
-        /* Immagine nella card */
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
         .card img {
             width: 100%;
-            height: auto;
+            height: 200px;
             object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 1rem;
         }
 
-        /* Bottone prenota */
+        .card-content {
+            padding: 1rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-content h3 {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-content p {
+            margin: 0.3rem 0;
+            color: #555;
+        }
+
+        .price {
+            font-weight: bold;
+            color: #27ae60;
+        }
+
         .btn-book {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            background-color: #2980b9;
+            margin-top: 1rem;
+            padding: 0.6rem 1rem;
+            background-color: #3498db;
             color: white;
             border: none;
             border-radius: 6px;
@@ -56,53 +86,43 @@
             font-weight: bold;
             transition: background-color 0.3s ease;
         }
+
         .btn-book:hover {
-            background-color: #1f6391;
+            background-color: #2980b9;
         }
 
-        /* Messaggio errore */
         .error-message {
-            color: red;
+            color: #e74c3c;
+            background-color: #fbeaea;
+            border: 1px solid #e0b4b4;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 2rem;
+            text-align: center;
             font-weight: bold;
-            margin-bottom: 1rem;
         }
     </style>
 </head>
 <body>
 
-<!-- Header: caricato da fragment -->
+<!-- Header -->
 <div th:replace="~{fragments/header :: header}"></div>
 
 <main>
-    <h2 style="text-align: center;">Prenota una visita guidata</h2>
+    <h2>Prenota una visita guidata</h2>
 
     <!-- Messaggio di errore -->
     <div class="error-message" th:if="${errorMessage}" th:text="${errorMessage}"></div>
 
-    <!-- Form selezione aereo 
-    <form th:action="@{/user/bookVisit}" method="post">
-        <label for="airplaneId"><strong>Scegli un aereo:</strong></label>
-        <select name="airplaneId" id="airplaneId" required style="width: 100%; padding: 0.5rem; margin-top: 0.5rem;">
-            <option value="" disabled selected>-- Seleziona un aereo --</option>
-            <option th:each="plane : ${airplanes}"
-                    th:value="${plane.id}"
-                    th:text="${plane.modelName} + ' - ' + ${plane.description}">
-            </option>
-        </select>
-        <br><br>
-        <button type="submit" style="padding: 0.6rem 1.2rem;">Prenota</button>
-    </form>    -->
-
-    <!-- Griglia aerei con prenotazione diretta -->
+    <!-- Griglia di aerei -->
     <section class="airplane-grid">
         <div class="card" th:each="plane : ${airplanes}">
             <img th:src="@{/airplane/{id}/image(id=${plane.id})}" th:alt="${plane.modelName}" />
             <div class="card-content">
                 <h3 th:text="${plane.modelName}"></h3>
-                <p th:text="'Descrizione: ' + ${plane.description}"></p>
-                <p class="price" th:text="${plane.price} + '€'"></p>
-
-                <form th:action="@{/user/bookVisit}" method="post" style="margin-top: 1rem;">
+                <p th:text="${plane.description}"></p>
+                <p class="price" th:text="${plane.price} + ' €'"></p>
+                <form th:action="@{/user/bookVisit}" method="post">
                     <input type="hidden" name="airplaneId" th:value="${plane.id}" />
                     <button type="submit" class="btn-book">Prenota</button>
                 </form>
