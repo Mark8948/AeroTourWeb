@@ -1,119 +1,118 @@
 <!DOCTYPE html>
-<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<html lang="it" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-  <meta charset="UTF-8">
-  <title>Prenota Visita Guidata</title>
-  <link rel="stylesheet" th:href="@{/css/style.css}">
-  <style>
-    main.visit-booking {
-      max-width: 1000px;
-      margin: 2rem auto;
-      padding: 1rem;
-    }
-    .visit-title {
-      text-align: center;
-      margin-bottom: 2rem;
-      color: #333;
-    }
-    .airplane-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-    .airplane-card {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #fff;
-      padding: 1.2rem 1.5rem;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-      gap: 1rem;
-    }
-    .airplane-info {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-      max-width: 70%;
-    }
-    .airplane-info h3 {
-      margin: 0 0 0.3rem 0;
-      color: #005f99;
-    }
-    .airplane-info p {
-      margin: 0.2rem 0;
-      color: #444;
-      font-size: 0.95rem;
-    }
-    .airplane-info span {
-      color: #666;
-      font-size: 0.9rem;
-    }
-    .airplane-image {
-      max-width: 200px;
-      max-height: 120px;
-      object-fit: contain;
-      border-radius: 6px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .btn-book {
-      padding: 0.6rem 1.2rem;
-      background-color: #007acc;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: background-color 0.3s ease;
-      cursor: pointer;
-    }
-    .btn-book:hover {
-      background-color: #005fa3;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <title>Prenota Visita</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <style>
+        main {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+
+        /* Solo form dentro main (non influenziamo altri form globali) */
+        main > form {
+            margin-bottom: 2rem;
+            background: #f4f4f4;
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+
+        /* Griglia di card */
+        .airplane-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Card singola */
+        .card {
+            border: 1px solid #ccc;
+            padding: 1rem;
+            border-radius: 10px;
+            background-color: #fff;
+        }
+
+        /* Immagine nella card */
+        .card img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        /* Bottone prenota */
+        .btn-book {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .btn-book:hover {
+            background-color: #1f6391;
+        }
+
+        /* Messaggio errore */
+        .error-message {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+    </style>
 </head>
 <body>
 
-<!-- Header -->
-<div th:replace="fragments/header :: header"></div>
+<!-- Header: caricato da fragment -->
+<div th:replace="~{fragments/header :: header}"></div>
 
-<main class="visit-booking">
-  <h1 class="visit-title">Prenota una Visita Guidata</h1>
-  
-  <!-- Messaggio di errore -->
-  <div th:if="${errorMessage}" style="color: red; font-weight: bold; text-align: center; margin-bottom: 1rem;">
-      <p th:text="${errorMessage}"></p>
-  </div>
+<main>
+    <h2 style="text-align: center;">Prenota una visita guidata</h2>
 
+    <!-- Messaggio di errore -->
+    <div class="error-message" th:if="${errorMessage}" th:text="${errorMessage}"></div>
 
-  <div class="airplane-list">
+    <!-- Form selezione aereo 
+    <form th:action="@{/user/bookVisit}" method="post">
+        <label for="airplaneId"><strong>Scegli un aereo:</strong></label>
+        <select name="airplaneId" id="airplaneId" required style="width: 100%; padding: 0.5rem; margin-top: 0.5rem;">
+            <option value="" disabled selected>-- Seleziona un aereo --</option>
+            <option th:each="plane : ${airplanes}"
+                    th:value="${plane.id}"
+                    th:text="${plane.modelName} + ' - ' + ${plane.description}">
+            </option>
+        </select>
+        <br><br>
+        <button type="submit" style="padding: 0.6rem 1.2rem;">Prenota</button>
+    </form>    -->
 
-    <!-- Ciclo sugli aerei ricevuti dal backend -->
-    <div th:each="airplane : ${airplanes}" class="airplane-card">
+    <!-- Griglia aerei con prenotazione diretta -->
+    <section class="airplane-grid">
+        <div class="card" th:each="plane : ${airplanes}">
+            <img th:src="@{/airplane/{id}/image(id=${plane.id})}" th:alt="${plane.modelName}" />
+            <div class="card-content">
+                <h3 th:text="${plane.modelName}"></h3>
+                <p th:text="'Descrizione: ' + ${plane.description}"></p>
+                <p class="price" th:text="${plane.price} + '€'"></p>
 
-      <!-- Immagine solo se presente -->
-      <img th:if="${airplane.urlImage != null}" th:src="@{${airplane.urlImage}}" alt="Immagine aereo" class="airplane-image" />
-
-      <div class="airplane-info">
-        <h3 th:text="${airplane.modelName}">Nome Aereo</h3>
-        <p th:text="${airplane.description}">Descrizione aereo</p>
-        <span th:text="'Anno costruzione: ' + ${airplane.buildYear}">Anno costruzione</span><br/>
-        <span th:text="'Prezzo: €' + ${#numbers.formatDecimal(airplane.price, 1, 'COMMA', 2, 'POINT')}">Prezzo</span>
-      </div>
-
-	  <form th:action="@{/user/bookVisit}" method="post">
-	    <input type="hidden" name="airplaneId" th:value="${airplane.id}" />
-	    <button type="submit" class="btn-book">Prenota Visita</button>
-	  </form>
-
-
-    </div>
-
-  </div>
+                <form th:action="@{/user/bookVisit}" method="post" style="margin-top: 1rem;">
+                    <input type="hidden" name="airplaneId" th:value="${plane.id}" />
+                    <button type="submit" class="btn-book">Prenota</button>
+                </form>
+            </div>
+        </div>
+    </section>
 </main>
 
 <!-- Footer -->
-<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 </html>

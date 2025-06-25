@@ -86,11 +86,9 @@
         <tbody>
           <tr th:each="booking : ${bookings}">
             <td th:text="${booking.airplane.modelName}">Modello</td>
-            <td class="text-center">
-              <img th:if="${booking.airplane.urlImage != null}"
-                   th:src="${booking.airplane.urlImage}"
-                   alt="Immagine Aereo">
-            </td>
+			<td class="text-center">
+			  <img th:src="@{/airplane/{id}/image(id=${booking.airplane.id})}" alt="Immagine Aereo" />
+			</td>
             <td th:text="${#temporals.format(booking.visitDateTime, 'dd/MM/yyyy HH:mm')}">
               dd/MM/yyyy HH:mm
             </td>
