@@ -52,21 +52,8 @@ public class AdminPersonalAreaController {
     public String showEditPlaneForm(@PathVariable Long id, Model model) {
         Airplane airplane = airplaneService.getAirplane(id);
 
-        // Defensive call to ensure the list is initialized
-        if (airplane.getCustomizations() == null) {
-            airplane.setCustomizations(new ArrayList<>());
-        } else {
-			// Trigger lazy loading to avoid Thymeleaf NullPointerException
-        	System.out.println(airplane.getCustomizations().size());
-        	
-        	for (AirplaneCustomization mod : airplane.getCustomizations()) {
-        	    System.out.println(mod);
-        	}
-        	
-        	airplane.getCustomizations().size();
-        }
-
         model.addAttribute("airplane", airplane);
+        model.addAttribute("customizations", airplane.getCustomizations());
         return "admin/editPlaneForm";
     }
 

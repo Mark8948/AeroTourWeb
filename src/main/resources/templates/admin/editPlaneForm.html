@@ -38,31 +38,19 @@
       <!--<input type="text" th:field="*{urlImage}">-->
     </div>
 	
-	<div class="section" th:if="${airplane.customizations != null and #lists.size(airplane.customizations) > 0}">
+	<div class="customizations" th:if="${airplane.customizations != null and #lists.size(airplane.customizations) > 0}">
 	  <h3>Modifiche Esistenti</h3>
-	  <!-- TODO
-	  <div th:each="mod : ${airplane.customizations[0]}" class="custom-entry">
-	    <input type="hidden" name="modificationIds" th:value="${mod.id}">
-	    <label>Nome:</label>
-	    <input type="text" name="modificationNames" th:value="${mod.modificationName}" required>
-	    <label>Descrizione:</label>
-	    <input type="text" name="modificationDescriptions" th:value="${mod.description}" required>
-	    <label>Disponibile da:</label>
-	    <input type="date" name="modificationDates" th:value="${mod.modificationFirstAvailabilityDate}" required>
-	    <label>Prezzo:</label>
-	    <input type="number" name="modificationPrices" th:value="${mod.modificationPrice}" step="0.01" required>
-	  </div>
-	  -->
-	  <div th:if="${airplane.customizations != null and #lists.size(airplane.customizations) > 0}" class="custom-entry">
-	      <input type="hidden" name="modificationIds" th:value="${airplane.customizations[1].id}">
+	  
+	  <div th:each="customization : ${customizations}" class="customizations">
+	      <input type="hidden" name="modificationIds" th:value="${customization.id}">
 	      <label>Nome:</label>
-	      <input type="text" name="modificationNames" th:value="${airplane.customizations[1].modificationName}" required>
+	      <input type="text" name="modificationNames" th:value="${customization.modificationName}" required>
 	      <label>Descrizione:</label>
-	      <input type="text" name="modificationDescriptions" th:value="${airplane.customizations[1].description}" required>
+	      <input type="text" name="modificationDescriptions" th:value="${customization.description}" required>
 	      <label>Disponibile da:</label>
-	      <input type="date" name="modificationDates" th:value="${airplane.customizations[1].modificationFirstAvailabilityDate}" required>
+	      <input type="date" name="modificationDates" th:value="${customization.modificationFirstAvailabilityDate}" required>
 	      <label>Prezzo:</label>
-	      <input type="number" name="modificationPrices" th:value="${airplane.customizations[1].modificationPrice}" step="0.01" required>
+	      <input type="number" name="modificationPrices" th:value="${customization.modificationPrice}" step="0.01" required>
 	    </div>
 	</div>
 
@@ -111,7 +99,7 @@
       });
 
       const div = document.createElement("div");
-      div.className = "custom-entry";
+      div.className = "customizations";
       div.innerHTML = `<strong>${name}</strong><br>${desc}<br>Disponibile da: ${date}<br>Prezzo: €${price}`;
       newModList.appendChild(div);
 
