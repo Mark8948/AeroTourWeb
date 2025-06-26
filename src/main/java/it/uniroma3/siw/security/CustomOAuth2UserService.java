@@ -25,16 +25,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        // Recupera l'utente da Google
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        Map<String, Object> attributes = oAuth2User.getAttributes();
 
-        String email = (String) attributes.get("email");
-        String name = (String) attributes.get("given_name");
-        String surname = (String) attributes.get("family_name");
-        String pictureUrl = (String) attributes.get("picture");
+        // Estrai direttamente gli attributi con getAttribute
+        String email = oAuth2User.getAttribute("email");
+        String name = oAuth2User.getAttribute("given_name");
+        String surname = oAuth2User.getAttribute("family_name");
+        String pictureUrl = oAuth2User.getAttribute("picture");
 
-        // Cerca l'utente nel DB, altrimenti lo crea
+        // Cerca o crea l'utente nel DB
         Users user = userRepository.findByEmail(email).orElseGet(() -> {
             Users newUser = new Users();
             newUser.setEmail(email);
@@ -45,9 +44,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         });
 
         return new DefaultOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
-                attributes,
-                "email"
+            Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
+            oAuth2User.getAttributes(),
+            "email"
         );
     }
+
 }

@@ -23,6 +23,7 @@ public class AirplaneService {
     public Airplane getAirplane(Long id) {
         Optional<Airplane> result = this.airplaneRepository.findById(id);
         return result.orElse(null);
+        //return this.airplaneRepository.findWithCustomizations(id).orElse(null);
     }
 
     @Transactional

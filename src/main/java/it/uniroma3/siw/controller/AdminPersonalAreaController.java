@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.uniroma3.siw.model.tables.Airplane;
+import it.uniroma3.siw.model.tables.AirplaneCustomization;
 import it.uniroma3.siw.service.AirplaneService;
 import it.uniroma3.siw.service.VisitsBookingService;
 
@@ -50,14 +51,27 @@ public class AdminPersonalAreaController {
     @GetMapping("/admin/editPlane/{id}")
     public String showEditPlaneForm(@PathVariable Long id, Model model) {
         Airplane airplane = airplaneService.getAirplane(id);
+
+        // Defensive call to ensure the list is initialized
         if (airplane.getCustomizations() == null) {
             airplane.setCustomizations(new ArrayList<>());
+        } else {
+			// Trigger lazy loading to avoid Thymeleaf NullPointerException
+        	System.out.println(airplane.getCustomizations().size());
+        	
+        	for (AirplaneCustomization mod : airplane.getCustomizations()) {
+        	    System.out.println(mod);
+        	}
+        	
+        	airplane.getCustomizations().size();
         }
+
         model.addAttribute("airplane", airplane);
         return "admin/editPlaneForm";
     }
 
-    @PostMapping("/editPlane/{id}")
+
+    @PostMapping("/admin/editPlane/{id}")
     public String updateAirplane(
             @PathVariable Long id,
             @ModelAttribute("airplane") Airplane airplane,
@@ -71,6 +85,9 @@ public class AdminPersonalAreaController {
 
         airplane.setId(id);
 
+        // Fetch existing airplane from DB
+        Airplane existingAirplane = airplaneService.getAirplane(id);
+
         if (names != null) {
             int count = names.size();
             if ((modIds != null && modIds.size() != count) ||
@@ -81,8 +98,11 @@ public class AdminPersonalAreaController {
             }
         }
 
+        // If a new image was uploaded, update it; else keep the old one
         if (imageFile != null && !imageFile.isEmpty()) {
             airplane.setImage(imageFile.getBytes());
+        } else {
+            airplane.setImage(existingAirplane.getImage());
         }
 
         Airplane updated = airplaneService.saveAirplaneWithCustomizations(

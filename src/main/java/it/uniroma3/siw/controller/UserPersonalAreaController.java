@@ -100,6 +100,7 @@ public class UserPersonalAreaController {
         model.addAttribute("bookings", bookings);
         return "user/userVisitsBooked";
     }
+
     
     @PostMapping("/user/cancelBooking/{id}")
     public String cancelBooking(@PathVariable("id") Long id) {
