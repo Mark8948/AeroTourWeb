@@ -3,6 +3,8 @@ package it.uniroma3.siw.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
@@ -98,11 +100,15 @@ public class UserPersonalAreaController {
         model.addAttribute("bookings", bookings);
         return "user/userVisitsBooked";
     }
+
     
     @PostMapping("/user/cancelBooking/{id}")
     public String cancelBooking(@PathVariable("id") Long id) {
         visitsBookingService.cancelBooking(id);
         return "redirect:/user/bookings";
     }
+    
+    
+
 
 }
