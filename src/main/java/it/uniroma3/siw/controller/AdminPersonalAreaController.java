@@ -15,7 +15,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.uniroma3.siw.model.tables.Airplane;
 import it.uniroma3.siw.model.tables.AirplaneCustomization;
+import it.uniroma3.siw.model.tables.OrderRequest;
 import it.uniroma3.siw.service.AirplaneService;
+import it.uniroma3.siw.service.OrderRequestService;
 import it.uniroma3.siw.service.VisitsBookingService;
 
 @Controller
@@ -26,6 +28,9 @@ public class AdminPersonalAreaController {
 
     @Autowired
     private VisitsBookingService visitsBookingService;
+    
+    @Autowired
+    private OrderRequestService orderRequestService;
 
     @GetMapping("/admin")
     public String adminDashboard() {
@@ -146,7 +151,7 @@ public class AdminPersonalAreaController {
     @GetMapping("/admin/removePlane")
     public String showRemovePlanePage(Model model) {
         model.addAttribute("airplanes", airplaneService.getAllAirplanes());
-        return "admin/removePlane";
+        return "/admin/removePlane";
     }
 
     @GetMapping("/admin/removePlane/{id}")
@@ -176,4 +181,24 @@ public class AdminPersonalAreaController {
         visitsBookingService.rejectBooking(id);
         return "redirect:/admin/manageVisits";
     }
+    
+    @GetMapping("/admin/manageOrders")
+    public String showManageOrdersPage(Model model) {
+    	Iterable<OrderRequest> orderList = orderRequestService.getAllOrderRequests();
+    	model.addAttribute("orders", orderList);
+		return "/admin/manageOrders";
+    }
+    
+    @PostMapping("/admin/confirmOrder/{id}")
+    public String confirmOrder(@PathVariable Long id) {
+        orderRequestService.confirmOrder(id);
+        return "redirect:/admin/manageOrders";
+    }
+
+    @PostMapping("/admin/rejectOrder/{id}")
+    public String rejectOrder(@PathVariable Long id) {
+        orderRequestService.rejectOrder(id);
+        return "redirect:/admin/manageOrders";
+    }
+    
 }

@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import it.uniroma3.siw.model.enums.Status;
 import it.uniroma3.siw.model.tables.Airplane;
+import it.uniroma3.siw.model.tables.OrderRequest;
 import it.uniroma3.siw.model.tables.Users;
 import it.uniroma3.siw.model.tables.VisitsBooking;
 import it.uniroma3.siw.service.AirplaneService;
+import it.uniroma3.siw.service.OrderRequestService;
 import it.uniroma3.siw.service.UsersService;
 import it.uniroma3.siw.service.VisitsBookingService;
 
@@ -33,6 +35,9 @@ public class UserPersonalAreaController {
 
 	@Autowired
 	private UsersService usersService;
+	
+	@Autowired 
+	private OrderRequestService orderRequestService;
 
 	@GetMapping("user")
 	public String home() {
@@ -43,18 +48,34 @@ public class UserPersonalAreaController {
 	 * Pagina per creare un nuovo ordine
 	 */
 	@GetMapping("/user/newOrder")
-	public String newOrder() {
+	public String newOrder(Model model) {
+		Iterable<Airplane> airplanes = airplaneService.getAllAirplanes();
+		
+		model.addAttribute("airplanes", airplanes);
+		
 		return "user/userNewOrder";
 	}
+	
+	
+	 /** Salva l'ordine per l'aereo con id = {id} */
+    @PostMapping("/user/orderPlane/{id}")
+    public String saveOrder(@PathVariable("id") Long id) {
+        Users currentUser = usersService.getCurrentUser();
 
-	/**
-	 * Visualizzazione ordini passati
-	 */
-	@GetMapping("/user/orders")
-	public String orderHistory() {
-		// TODO: Aggiungere logica per prendere gli ordini dell'utente
-		return "user/userOrders";
-	}
+        orderRequestService.createOrder(currentUser, id);
+        
+        return "redirect:/user/orders";
+    }
+
+    /** Visualizza la cronologia ordini dell'utente */
+    
+    @GetMapping("/user/orders")
+    public String orderHistory(Model model) {
+        Users currentUser = usersService.getCurrentUser();
+        List<OrderRequest> orders = orderRequestService.findOrdersByUser(currentUser);
+        model.addAttribute("orders", orders);
+        return "user/userOrders";
+    }
 
 	/**
 	 * Mostra il form per prenotare una visita con la lista di aerei
@@ -109,6 +130,11 @@ public class UserPersonalAreaController {
     }
     
     
+    @PostMapping("/user/invalidateOrder/{id}")
+    public String annullaOrder(@PathVariable Long id) {
+        orderRequestService.annullaOrder(id);
+        return "redirect:/user/orders";
+    }
 
 
 }
