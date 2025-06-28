@@ -1,6 +1,8 @@
 package it.uniroma3.siw.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import it.uniroma3.siw.model.enums.Status;
 import it.uniroma3.siw.model.tables.Airplane;
+import it.uniroma3.siw.model.tables.AirplaneCustomization;
 import it.uniroma3.siw.model.tables.OrderRequest;
 import it.uniroma3.siw.model.tables.Users;
 import it.uniroma3.siw.model.tables.VisitsBooking;
@@ -50,9 +53,14 @@ public class UserPersonalAreaController {
 	@GetMapping("/user/newOrder")
 	public String newOrder(Model model) {
 		Iterable<Airplane> airplanes = airplaneService.getAllAirplanes();
-		
 		model.addAttribute("airplanes", airplanes);
 		
+		Map<Long, List<AirplaneCustomization>> map = new HashMap<>();
+		for(Airplane plane: airplanes) {
+			map.put( plane.getId(), plane.getCustomizations());
+			System.out.println(plane.getId() + " : " + plane.getCustomizations());
+		} 
+		model.addAttribute("customizationsMap", map);
 		return "user/userNewOrder";
 	}
 	

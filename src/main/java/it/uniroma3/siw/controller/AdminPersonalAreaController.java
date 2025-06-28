@@ -80,7 +80,7 @@ public class AdminPersonalAreaController {
         // Fetch existing airplane from DB
         Airplane existingAirplane = airplaneService.getAirplane(id);
 
-        if (modIds.size() > names.size()) {
+        if ( modIds!= null && modIds.size() > names.size()) {
             throw new IllegalArgumentException("modIds list non allineata " + modIds.size() + " " + names.size());
         }
 
