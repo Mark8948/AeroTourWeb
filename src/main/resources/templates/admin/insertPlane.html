@@ -32,8 +32,24 @@
 			<label for="price">Prezzo (€):</label>
 			<input type="number" id="price" th:field="*{price}" step="0.01" />
 
-			<label for="image">Carica Immagine:</label>
-			<input type="file" id="image" name="imageFile" accept="image/*" />
+			<label class="browse-btn">
+				    Immagine (upload):
+				    <span id="file-name">Nessun file selezionato</span>
+				    <input type="file" name="imageFile" accept="image/*" style="display:none" />
+				  </label>
+				  
+				  <script>
+				    const input = document.querySelector('input[type="file"][name="imageFile"]');
+				    const fileNameSpan = document.getElementById('file-name');
+
+				    input.addEventListener('change', () => {
+				      if (input.files.length > 0) {
+				        fileNameSpan.textContent = input.files[0].name;
+				      } else {
+				        fileNameSpan.textContent = 'Nessun file selezionato';
+				      }
+				    });
+				  </script>
 
 			<div class="customizations">
 				<h3>Aggiungi Modifiche Applicabili</h3>

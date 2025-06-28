@@ -1,22 +1,56 @@
-/* Reset base */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* Global Box Sizing */
+*, *::before, *::after {
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box;
+}
+
+/* Root Variables */
+:root {
+  --color-primary: #0066cc;
+  --color-primary-dark: #0052a3;
+  --color-primary-light: #2980b9;
+
+  --color-secondary: #007acc;
+  --color-secondary-dark: #004494;
+
+  --color-danger: #e74c3c;
+  --color-danger-dark: #9c291e ;
+  
+  --color-green: #28a745;
+  --color-green-dark: #1e7e34;
+  
+  --color-bg: #eef2f7;
+  --color-text: #333;
+  --color-text-muted: #555;
+  --color-white: #fff;
+  --color-disabled: #ccc;
+  --color-focus-outline: #80bdff;
+
+  /* Extended greys */
+  --color-grey-light: #dcdcdc;
+  --color-grey-medium: #999999;
+  --color-grey-dark: #444444;
+  
+  --box-shadow: rgba(0,0,0,0.15);
+}
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #eef2f7;
-  color: #333;
+  background-color:var(--color-bg);
+  color:var(--color-text);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
 header {
-  background: linear-gradient(90deg, #0066cc, #0052a3);
+  background: linear-gradient(90deg,var(--color-primary) ,var(--color-primary-dark));
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #fff;
+  color:var(--color-white);
 }
 
 .logo {
@@ -25,7 +59,7 @@ header {
 }
 
 nav a {
-  color: #fff;
+  color:var(--color-white);
   text-decoration: none;
   margin-right: 1.5rem;
   font-weight: 500;
@@ -41,10 +75,10 @@ nav a:hover { opacity: 0.8; }
 
 .btn {
   padding: 0.5rem 1rem;
-  border: 2px solid #fff;
+  border: 2px solid var(--color-white);
   border-radius: 4px;
   background-color: transparent;
-  color: #fff;
+  color:var(--color-white);
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -55,10 +89,10 @@ button.btn {
   all: unset;
   display: inline-block;
   padding: 0.5rem 1rem;
-  border: 2px solid #fff;
+  border: 2px solid var(--color-white);
   border-radius: 4px;
   background-color: transparent;
-  color: #fff;
+  color:var(--color-white);
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -69,7 +103,6 @@ button.btn {
   line-height: normal;
   text-align: center;
 }
-
 
 .btn:hover { background-color: rgba(255,255,255,0.2); }
 
@@ -85,9 +118,9 @@ main {
 }
 
 .card {
-  background: #fff;
+  background:var(--color-white);
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px var(--box-shadow);
   overflow: hidden;
   transition: transform 0.2s;
 }
@@ -111,22 +144,89 @@ main {
 .card-content p {
   font-size: 0.9rem;
   margin-bottom: 0.5rem;
-  color: #555;
+  color:var(--color-text-muted);
 }
 
 .card-content .price {
   font-weight: bold;
-  color: #0066cc;
+  color:var( --color-primary)
 }
 
 footer {
-  background-color: #004085;
+  background-color:var(--color-secondary-dark);
   padding: 1rem 2rem;
   text-align: center;
-  color: #fff;
+  color:var(--color-white);
 }
 
 footer address {
   font-style: normal;
   line-height: 1.5;
+}
+
+.btn-cancel, .btn-reject {
+  padding: 0.4rem 0.8rem;
+  background-color: var(--color-danger);
+  color:var(--color-white);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-cancel:hover, .btn-reject:hover {
+  background-color: var(--color-danger-dark);
+}
+
+.btn-cancel:disabled {
+  background-color:var(--color-disabled);
+  cursor: not-allowed;
+}
+
+.btn-cancel:hover:not(:disabled) {
+  background-color: var(--color-danger-dark);
+}
+
+.btn-confirm {
+  background-color: var(--color-green);
+  color: #fff;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-confirm:hover {
+  background-color: var(--color-green-dark);
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.browse-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color:var( --color-primary);
+  color:var(--color-white);
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  user-select: none;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  box-shadow: 0 2px 6px var(--box-shadow);
+}
+
+.browse-btn:hover {
+  background-color: var(--color-primary-light);
+}
+
+.browse-btn:active {
+  background-color: var(--color-primary-dark);
+}
+
+.browse-btn:focus {
+  outline: 3px solid var(--color-focus-outline);
+  outline-offset: 2px;
 }

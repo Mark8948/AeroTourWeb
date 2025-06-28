@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <title>Homepage Aerei</title>
   <link rel="stylesheet" th:href="@{/css/style.css}" />
+  <link rel="stylesheet" th:href="@{/css/planepagesform.css}" />
 </head>
 <body>
 
@@ -28,7 +29,7 @@
 		      <input type="hidden"
 		             th:name="${_csrf.parameterName}"
 		             th:value="${_csrf.token}" />
-		      <button type="submit" class="order-button">ORDINA</button>
+		      <button type="submit" class="btn-book">Ordina</button>
 		  </form>
         </div>
       </div>

@@ -80,16 +80,11 @@ public class AdminPersonalAreaController {
         // Fetch existing airplane from DB
         Airplane existingAirplane = airplaneService.getAirplane(id);
 
-        if (names != null) {
-            int count = names.size();
-            if ((modIds != null && modIds.size() != count) ||
-                (descs == null || descs.size() < count) ||
-                (dates == null || dates.size() < count) ||
-                (prices == null || prices.size() < count)) {
-                throw new IllegalArgumentException("Liste delle modifiche incoerenti o incomplete.");
-            }
+        if (modIds.size() > names.size()) {
+            throw new IllegalArgumentException("modIds list non allineata " + modIds.size() + " " + names.size());
         }
 
+        
         // If a new image was uploaded, update it; else keep the old one
         if (imageFile != null && !imageFile.isEmpty()) {
             airplane.setImage(imageFile.getBytes());
