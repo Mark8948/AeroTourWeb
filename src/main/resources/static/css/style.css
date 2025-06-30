@@ -230,3 +230,37 @@ input[type="file"] {
   outline: 3px solid var(--color-focus-outline);
   outline-offset: 2px;
 }
+
+.section {
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.button-link {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: var(--color-secondary);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  margin: 10px 10px 0 0;
+}
+.button-link:hover {
+  background-color: var(--color-secondary-dark);
+}
+.button-link-danger {
+  background-color: var(--color-danger);
+}
+.button-link-danger:hover {
+  background-color: var(--color-danger-dark);
+}
+.button-link-success {
+  background-color: var(--color-green);
+}
+.button-link-success:hover {
+  background-color: var(--color-green-dark);
+}
