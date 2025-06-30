@@ -1,79 +1,94 @@
 package it.uniroma3.siw.model.tables;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
 
 @Entity
 public class AirplaneCustomization {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
-	
-	@Column(nullable = false)
-	private String modificationName;
-	
-	@Column(nullable = false, length = 2000)
-	private String description;
-	
-	private LocalDate modificationFirstAvailabilityDate;
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    
+    @Column(nullable = false)
+    private String modificationName;
+    
+    @Column(nullable = false, length = 2000)
+    private String description;
+    
+    private LocalDate modificationFirstAvailabilityDate;
 
-	private float modificationPrice;
+    private float modificationPrice;
 
-	@ManyToOne
-	@JoinColumn(name = "airplane_id")  // nome della colonna FK nella tabella AirplaneCustomization
-	private Airplane airplane;
+    @ManyToOne
+    @JoinColumn(name = "airplane_id")
+    private Airplane airplane;
 
-	// =================
-	// Getters & Setters
-	// =================
+    // === Relazione verso OrderRequest ===
+    @ManyToOne
+    @JoinColumn(name = "orderrequest_id", nullable = true)
+    private OrderRequest orderRequest;
 
-	public Long getId() {
-		return id;
-	}
+    // =================
+    // Getters & Setters
+    // =================
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getModificationName() {
-		return modificationName;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setModificationName(String modificationName) {
-		this.modificationName = modificationName;
-	}
+    public String getModificationName() {
+        return modificationName;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public void setModificationName(String modificationName) {
+        this.modificationName = modificationName;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public LocalDate getModificationFirstAvailabilityDate() {
-		return modificationFirstAvailabilityDate;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public void setModificationFirstAvailabilityDate(LocalDate modificationAvailabilityDate) {
-		this.modificationFirstAvailabilityDate = modificationAvailabilityDate;
-	}
+    public LocalDate getModificationFirstAvailabilityDate() {
+        return modificationFirstAvailabilityDate;
+    }
 
-	public float getModificationPrice() {
-		return modificationPrice;
-	}
+    public void setModificationFirstAvailabilityDate(LocalDate modificationFirstAvailabilityDate) {
+        this.modificationFirstAvailabilityDate = modificationFirstAvailabilityDate;
+    }
 
-	public void setModificationPrice(float modificationPrice) {
-		this.modificationPrice = modificationPrice;
-	}
+    public float getModificationPrice() {
+        return modificationPrice;
+    }
 
-	public Airplane getAirplane() {
-		return airplane;
-	}
+    public void setModificationPrice(float modificationPrice) {
+        this.modificationPrice = modificationPrice;
+    }
 
-	public void setAirplane(Airplane airplane) {
-		this.airplane = airplane;
-	}
+    public Airplane getAirplane() {
+        return airplane;
+    }
+
+    public void setAirplane(Airplane airplane) {
+        this.airplane = airplane;
+    }
+
+    public OrderRequest getOrderRequest() {
+        return orderRequest;
+    }
+
+    public void setOrderRequest(OrderRequest orderRequest) {
+        this.orderRequest = orderRequest;
+    }
 }
