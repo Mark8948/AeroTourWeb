@@ -35,6 +35,10 @@ public class OrderRequest {
 	@Enumerated(EnumType.STRING) // string in db invece che un numero
 	@Column(nullable = false, length = 25)
 	private Status stato;
+	
+	@Column(nullable = false)
+	private float totalPrice;
+
 
 	public LocalDateTime getCreationDate() {
 		return creationDate;
@@ -109,5 +113,13 @@ public class OrderRequest {
 
 	public void setCustomizations(List<AirplaneCustomization> customizations) {
 		this.customizations = customizations;
+	}
+
+	public float getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(float totalPrice) {
+		this.totalPrice = totalPrice;
 	}
 }

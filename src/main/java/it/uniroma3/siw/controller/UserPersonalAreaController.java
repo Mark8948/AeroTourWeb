@@ -1,12 +1,11 @@
 package it.uniroma3.siw.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
@@ -58,22 +57,31 @@ public class UserPersonalAreaController {
 		Map<Long, List<AirplaneCustomization>> map = new HashMap<>();
 		for(Airplane plane: airplanes) {
 			map.put( plane.getId(), plane.getCustomizations());
-			System.out.println(plane.getId() + " : " + plane.getCustomizations());
+			//System.out.println(plane.getId() + " : " + plane.getCustomizations());
 		} 
 		model.addAttribute("customizationsMap", map);
 		return "user/userNewOrder";
 	}
 	
 	
-	 /** Salva l'ordine per l'aereo con id = {id} */
-    @PostMapping("/user/orderPlane/{id}")
-    public String saveOrder(@PathVariable("id") Long id) {
-        Users currentUser = usersService.getCurrentUser();
+	@PostMapping("/user/orderPlane/{id}")
+	public String saveOrder(
+	    @PathVariable("id") Long id,
+	    @RequestParam(name = "customizationIds", required = false) List<Long> customizationIds) {
 
-        orderRequestService.createOrder(currentUser, id);
-        
-        return "redirect:/user/orders";
-    }
+	    Users currentUser = usersService.getCurrentUser();
+
+	    if (customizationIds == null) {
+	        customizationIds = new ArrayList<>();
+	    }
+
+	    //for(long idc :customizationIds )
+	    //	System.out.println(idc);
+	    
+	    orderRequestService.createOrder(currentUser, id, customizationIds);
+
+	    return "redirect:/user/orders";
+	}
 
     /** Visualizza la cronologia ordini dell'utente */
     
@@ -81,6 +89,10 @@ public class UserPersonalAreaController {
     public String orderHistory(Model model) {
         Users currentUser = usersService.getCurrentUser();
         List<OrderRequest> orders = orderRequestService.findOrdersByUser(currentUser);
+        for(OrderRequest mod: orders) {
+        	//System.out.println(mod.getCustomizations());
+        }
+        
         model.addAttribute("orders", orders);
         return "user/userOrders";
     }

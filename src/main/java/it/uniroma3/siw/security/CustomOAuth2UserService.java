@@ -15,7 +15,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.Map;
 
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
@@ -33,8 +32,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String surname = oAuth2User.getAttribute("family_name");
         String pictureUrl = oAuth2User.getAttribute("picture");
 
-        // Cerca o crea l'utente nel DB
-        Users user = userRepository.findByEmail(email).orElseGet(() -> {
+        userRepository.findByEmail(email).orElseGet(() -> {
             Users newUser = new Users();
             newUser.setEmail(email);
             newUser.setName(name);

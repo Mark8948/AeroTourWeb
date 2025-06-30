@@ -187,7 +187,8 @@ airplane-container {
   max-width: 1000px;
   margin: 2rem auto;
   padding: 1rem;
-  
+  height: auto;       /* Remove fixed or 100% height */
+  min-height: unset;  /* Remove any min-height if set */
   box-shadow: 0 2px 8px var(--box-shadow);
   border-radius: 8px;
 }

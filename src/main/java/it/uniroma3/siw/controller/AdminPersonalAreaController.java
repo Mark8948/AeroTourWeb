@@ -2,8 +2,9 @@ package it.uniroma3.siw.controller;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import it.uniroma3.siw.model.enums.Status;
 import it.uniroma3.siw.model.tables.Airplane;
-import it.uniroma3.siw.model.tables.AirplaneCustomization;
 import it.uniroma3.siw.model.tables.OrderRequest;
 import it.uniroma3.siw.service.AirplaneService;
 import it.uniroma3.siw.service.OrderRequestService;
@@ -179,10 +180,17 @@ public class AdminPersonalAreaController {
     
     @GetMapping("/admin/manageOrders")
     public String showManageOrdersPage(Model model) {
-    	Iterable<OrderRequest> orderList = orderRequestService.getAllOrderRequests();
-    	model.addAttribute("orders", orderList);
-		return "/admin/manageOrders";
+        Iterable<OrderRequest> orderList = orderRequestService.getAllOrderRequests();
+
+        // Filter orders with status IN_ATTESA_DI_CONFERMA
+        List<OrderRequest> pendingOrders = StreamSupport.stream(orderList.spliterator(), false)
+            .filter(o -> o.getStato() == Status.IN_ATTESA_DI_CONFERMA)
+            .collect(Collectors.toList());
+
+        model.addAttribute("orders", pendingOrders);
+        return "/admin/manageOrders";
     }
+
     
     @PostMapping("/admin/confirmOrder/{id}")
     public String confirmOrder(@PathVariable Long id) {

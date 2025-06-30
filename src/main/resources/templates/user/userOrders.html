@@ -8,9 +8,12 @@
 </head>
 <body>
 
+
   <!-- Header -->
   <div th:replace="~{fragments/header :: header}"></div>
 
+ <main>
+  
   <div class="container" style="background: #fff;">
     <h1>I tuoi ordini</h1>
 
@@ -28,6 +31,7 @@
             <th>Immagine</th>
             <th>Data Ordine</th>
             <th>Stato</th>
+			<th>Prezzo</th>
             <th class="text-center">Azioni</th>
           </tr>
         </thead>
@@ -42,6 +46,8 @@
               01/01/2025 12:00
             </td>
             <td th:text="${order.stato}">IN_ATTESA_DI_CONFERMA</td>
+			<td th:text="${order.totalPrice}">
+			</td>
             <td class="text-center">
               <form th:action="@{'/user/invalidateOrder/' + ${order.id}}"
                     method="post"
@@ -58,9 +64,9 @@
       </table>
     </section>
   </div>
-
-  <!-- Footer -->
-  <div th:replace="~{fragments/footer :: footer}"></div>
+</main>
+  <!-- Include footer -->
+  <div th:replace="fragments/footer :: footer"></div>
 
 </body>
 </html>
