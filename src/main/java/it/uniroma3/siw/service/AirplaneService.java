@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import it.uniroma3.siw.model.tables.Airplane;
 import it.uniroma3.siw.model.tables.AirplaneCustomization;
+import it.uniroma3.siw.model.tables.OrderRequest;
 import it.uniroma3.siw.repository.AirplaneRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class AirplaneService {
@@ -38,10 +40,19 @@ public class AirplaneService {
         return result;
     }
 
-    @Transactional
-    public void deleteAirplane(Long id) {
-        this.airplaneRepository.deleteById(id);
+    public void deleteAirplane(Long airplaneId) {
+        // 1) stacca gli ordini
+        airplaneRepository.detachOrdersByAirplaneId(airplaneId);
+        // 2) cancella le customizzazioni
+        airplaneRepository.deleteCustomizationsByAirplaneId(airplaneId);
+        // 3) cancella l’aereo
+        int deleted = airplaneRepository.deleteAirplaneById(airplaneId);
+        if (deleted == 0) {
+            throw new EntityNotFoundException("Airplane con id=" + airplaneId + " non trovato.");
+        }
     }
+
+
 
     @Transactional
     public Airplane saveAirplaneWithCustomizations(
