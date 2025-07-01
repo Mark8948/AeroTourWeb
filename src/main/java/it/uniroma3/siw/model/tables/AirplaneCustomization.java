@@ -27,7 +27,7 @@ public class AirplaneCustomization {
     @JoinColumn(name = "airplane_id")
     private Airplane airplane;
 
-    // === Relazione verso OrderRequest ===
+    // === Relazione verso OrderRequest === //TODO Remove
     @ManyToOne
     @JoinColumn(name = "orderrequest_id", nullable = true)
     private OrderRequest orderRequest;

@@ -27,7 +27,7 @@ public class Users {
     private String email;     // chiave univoca per identificare l'utente
 
     @Column
-    private String pictureUrl;   // URL foto profilo (se presente)
+    private String pictureUrl;   // TODO remove
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Credentials credentials;
