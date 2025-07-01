@@ -68,46 +68,43 @@
 		</form>
 
 		<script>
-			const form = document.getElementById("insertPlaneForm");
-			const modList = document.getElementById("modList");
-			let modsCount = 0;
+		   const form = document.getElementById("insertPlaneForm");
+		   const modList = document.getElementById("modList");
+		   let modsCount = 0;
 
-			function addModification() {
-				const name = document.getElementById("modName").value.trim();
-				const desc = document.getElementById("modDesc").value.trim();
-				const date = document.getElementById("modDate").value;
-				const price = document.getElementById("modPrice").value.trim();
+		   function addModification() {
+		     const name  = document.getElementById("modName").value;
+		     const desc  = document.getElementById("modDesc").value;
+		     const date  = document.getElementById("modDate").value;
+		     const price = document.getElementById("modPrice").value;
+		     if (!name || !desc || !date || !price) {
+		       alert("Compila tutti i campi della modifica.");
+		       return;
+		     }
+		     [
+		       ["modificationNames",        name],
+		       ["modificationDescriptions", desc],
+		       ["modificationDates",        date],
+		       ["modificationPrices",       price]
+		     ].forEach(([n,v])=>{
+		       const input = document.createElement("input");
+		       input.type  = "hidden";
+		       input.name  = n;
+		       input.value = v;
+		       form.appendChild(input);
+		     });
+		     modsCount++;
 
-				if (!name || !desc || !date || !price) {
-					alert("Compila tutti i campi della modifica.");
-					return;
-				}
 
-				// Creo input hidden con indice per gestire array lato backend
-				const fields = [
-					{name: `modificationNames[${modsCount}]`, value: name},
-					{name: `modificationDescriptions[${modsCount}]`, value: desc},
-					{name: `modificationDates[${modsCount}]`, value: date},
-					{name: `modificationPrices[${modsCount}]`, value: price},
-				];
-				fields.forEach(f => {
-					const input = document.createElement("input");
-					input.type = "hidden";
-					input.name = f.name;
-					input.value = f.value;
-					form.appendChild(input);
-				});
+			 const div = document.createElement("div");
+			 div.className = "customization-entry";
+			 div.textContent = `${name} — ${desc} — Disponibile da: ${date} — Prezzo: €${price}`;
+			 modList.appendChild(div);
 
-				const div = document.createElement("div");
-				div.className = "customization-entry";
-				div.textContent = `${name} — ${desc} — Disponibile da: ${date} — Prezzo: €${price}`;
-				modList.appendChild(div);
+ 			 // Reset campi
+ 			 ["modName", "modDesc", "modDate", "modPrice"].forEach(id => document.getElementById(id).value = "");
 
-				// Reset campi
-				["modName", "modDesc", "modDate", "modPrice"].forEach(id => document.getElementById(id).value = "");
-
-				modsCount++;
-			}
+		 }
 		</script>
 
 		<script th:inline="javascript" th:if="${airplaneInsertionSuccessMessage != null}">
