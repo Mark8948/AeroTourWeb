@@ -39,8 +39,8 @@ public class OrderRequest {
     @Column(nullable = false)
     private float totalPrice;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "airplane_id", nullable = false)
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "airplane_id", nullable = true)
     private Airplane airplane;
 
     @ManyToMany
