@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dove siamo - AeroTour</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" th:href="@{/css/map.css}" />
   <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
@@ -13,13 +12,10 @@
   <!-- <header>AeroTour - Dove siamo</header> -->
   <!-- Include header -->
   <div th:replace="fragments/header :: header"></div>
-  
-  <h1>Ci trovi a Roma, in Via Vito Volterra 62</h1>
+ <main>
+  <h1 class="map">Ci trovi a Roma, in Via Vito Volterra 62</h1>
 
   <div id="map"></div>
-
-  <!-- Include footer -->
-  <div th:replace="fragments/footer :: footer"></div>
 
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -49,7 +45,8 @@
       }, 1500); // pausa 1.5 secondi
     });
   </script>
-
-
+ </main> 
+ <!-- Include footer -->
+ <div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

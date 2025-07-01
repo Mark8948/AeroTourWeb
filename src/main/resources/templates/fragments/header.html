@@ -6,15 +6,17 @@
 </head>
 <body>
 <header th:fragment="header">
-  <div class="logo">AeroTour</div>
+  <a class="logo"  th:href="@{/}">AeroTour</a>
+  <!-- 
   <nav>
-    <a th:href="@{/}">Home</a>
-    <a th:href="@{/contatti}">Dove siamo</a>
+	<a th:href="@{/}">Home</a>
+    <a th:href="@{/contatti}">Dove siamo</a> 
   </nav>
+  -->
   <div class="auth-buttons">
     <a sec:authorize="isAnonymous()" th:href="@{/login}" class="btn">Login</a>
     <div sec:authorize="isAuthenticated()">
-      <span class="btn" style="border:none; cursor:default;">
+      <span class="btn" style="border:none; cursor:default; overflow: hidden;">
         Benvenuto, <span th:text="${username}"></span>
       </span>
 	  

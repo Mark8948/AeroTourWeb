@@ -5,8 +5,10 @@
 </head>
 <body>
 <footer th:fragment="footer">
-  <p>Contatti: +39 0123 456789 | email@aereisito.com</p>
-  <address>Via Vito Volterra, 62<br>00146 Roma, Italia</address>
+	<p>+39 0123 456789 | <a style="text-decoration: none; color: inherit;" href="mailto:email@aereisito.com">email@aereisito.com</a></p>
+	<a style="text-decoration: none; color: inherit;" th:href="@{/contatti}">	
+  		<address>Via Vito Volterra, 62<br>00146 Roma, Italia</address>
+  	</a>
 </footer>
 </body>
 </html>

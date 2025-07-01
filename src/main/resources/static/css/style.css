@@ -51,11 +51,14 @@ header {
   justify-content: space-between;
   align-items: center;
   color:var(--color-white);
+  overflow: auto;
 }
 
 .logo {
   font-size: 1.5rem;
   font-weight: bold;
+  text-decoration: none;
+  color: inherit;
 }
 
 nav a {
@@ -71,6 +74,7 @@ nav a:hover { opacity: 0.8; }
 .auth-buttons {
   display: flex;
   align-items: center;
+  overflow: auto;
 }
 
 .btn {
@@ -85,6 +89,7 @@ nav a:hover { opacity: 0.8; }
   margin-left: 1rem;
   text-decoration: none;
 }
+
 button.btn {
   all: unset;
   display: inline-block;
@@ -108,12 +113,12 @@ button.btn {
 
 main {
   flex: 1;
-  padding: 2rem;
+  padding: 1rem;
 }
 
 .airplane-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(40%, 1fr));
   gap: 1.5rem;
 }
 
@@ -157,6 +162,7 @@ footer {
   padding: 1rem 2rem;
   text-align: center;
   color:var(--color-white);
+  flex-grow: 0.01;
 }
 
 footer address {
@@ -248,6 +254,7 @@ input[type="file"] {
   font-weight: bold;
   transition: background-color 0.3s;
   margin: 10px 10px 0 0;
+  font-size: 1rem;
 }
 .button-link:hover {
   background-color: var(--color-secondary-dark);
@@ -264,3 +271,112 @@ input[type="file"] {
 .button-link-success:hover {
   background-color: var(--color-green-dark);
 }
+
+h1.map {
+  text-align: center;
+  color: #0052a3;
+  margin: 1.5rem 0;
+}
+#map {
+  height: 80vh;
+  width: 100%;
+  border: 3px solid #0052a3;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+  margin-bottom: 2rem;
+}
+
+/* Quando lo schermo è più piccolo di 700px */
+@media (max-width: 700px) {
+  .btn, button.btn, .logo{
+    padding: 0.3rem 0.6rem;
+    font-size: 0.875rem; /* più piccolo */
+    margin-left: 0.5rem;
+  }
+  header{
+	padding: 0.3rem 0.6rem;
+  }
+  a.button-link{
+	padding: 8px 16px;
+	margin: 8px 8px 0 0;
+	font-size: 0.95rem;
+  }	
+}
+
+/* Schermi fino a 500px */
+@media (max-width: 500px) {
+  .btn, button.btn, .logo{
+    padding: 0.2rem 0.4rem;
+    font-size: 0.75rem;
+    margin-left: 0.25rem;
+  }
+  header{
+  	padding: 0.2rem 0.4rem;
+  }
+  a.button-link{
+	padding: 6px 12px;
+    margin: 6px 6px 0 0;
+    font-size: 0.875rem;
+  }	
+}
+
+/* Schermi fino a 400px */	
+@media (max-width: 400px) {
+  .btn, button.btn, .logo{
+    padding: 0.1rem 0.2rem;
+    font-size: 0.3rem;
+    margin-left: 0.1rem;
+  }
+  header{
+  	padding: 0.1rem 0.2rem;
+   }
+   a.button-link{
+	padding: 4px 8px;
+	margin: 4px 4px 0 0;
+	font-size: 0.75rem;
+   }
+}
+
+/* Medium screens */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+}
+
+/* Small screens */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  h3 {
+    font-size: 1rem;
+  }
+  
+  /* Responsive: Make table horizontally scrollable on small screens */
+  @media (max-width: 600px) {
+    table {
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    section {
+		padding: 10px;
+		margin: 10px 0;
+    }
+  }

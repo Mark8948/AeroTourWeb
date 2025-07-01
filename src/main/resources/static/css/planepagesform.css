@@ -76,6 +76,7 @@ form textarea:focus {
   border: 1px solid #ddd;
   border-radius: 10px;
   background-color:var(--color-bg);
+  flex: 1;
 }
 
 .customization-entry {
@@ -187,10 +188,11 @@ airplane-container {
   max-width: 1000px;
   margin: 2rem auto;
   padding: 1rem;
-  height: auto;       /* Remove fixed or 100% height */
+  height: 100%;       /* Remove fixed or 100% height */
   min-height: unset;  /* Remove any min-height if set */
   box-shadow: 0 2px 8px var(--box-shadow);
   border-radius: 8px;
+  overflow: auto;
 }
 
 h1,
@@ -203,24 +205,29 @@ h3 {
 
 section {
   margin-bottom: 2rem;
+  overflow: auto;
+  flex: 1;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 0.5rem;
+  overflow: auto;
 }
 
 th,
 td {
   border: 1px solid #ddd;
   padding: 0.5rem 1rem;
+  overflow: auto;
 }
 
 th {
   background-color: var(--color-white);
   color: var(--color-text);
   text-align: left;
+  overflow: auto;
 }
 
 tbody tr:nth-child(even) {
