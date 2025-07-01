@@ -2,7 +2,10 @@ package it.uniroma3.siw.controller;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -16,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.uniroma3.siw.model.enums.Status;
 import it.uniroma3.siw.model.tables.Airplane;
+import it.uniroma3.siw.model.tables.AirplaneCustomization;
 import it.uniroma3.siw.model.tables.OrderRequest;
 import it.uniroma3.siw.service.AirplaneService;
 import it.uniroma3.siw.service.OrderRequestService;
@@ -188,6 +192,21 @@ public class AdminPersonalAreaController {
             .collect(Collectors.toList());
 
         model.addAttribute("orders", pendingOrders);
+        
+        //TODO
+        
+        Map<Long,  List<AirplaneCustomization>> map = new HashMap<>();
+        
+        for (OrderRequest order : pendingOrders) {
+            List<AirplaneCustomization> customizations = order.getCustomizations();
+            if (customizations == null) {
+                customizations = new ArrayList<>();
+            }
+            map.put(order.getId(), customizations);
+        }
+
+        model.addAttribute("map", map);
+        
         return "/admin/manageOrders";
     }
 

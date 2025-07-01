@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Objects;
 
 import it.uniroma3.siw.model.enums.Status;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,8 +14,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 
 @Entity
 public class OrderRequest {
@@ -43,10 +43,11 @@ public class OrderRequest {
     @JoinColumn(name = "airplane_id", nullable = false)
     private Airplane airplane;
 
-    @OneToMany(
-        mappedBy = "orderRequest",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true
+    @ManyToMany
+    @JoinTable(
+        name = "order_customization",
+        joinColumns = @JoinColumn(name = "order_id"),
+        inverseJoinColumns = @JoinColumn(name = "customization_id")
     )
     private List<AirplaneCustomization> customizations = new ArrayList<>();
 
@@ -107,26 +108,34 @@ public class OrderRequest {
     }
 
     public void setCustomizations(List<AirplaneCustomization> customizations) {
-        this.customizations = customizations;
-        for (AirplaneCustomization c : customizations) {
-            c.setOrderRequest(this);
+        // Clear current relationships
+        if (this.customizations != null) {
+            for (AirplaneCustomization c : this.customizations) {
+                c.getOrderRequests().remove(this);
+            }
+        }
+        this.customizations = customizations != null ? customizations : new ArrayList<>();
+
+        // Set new relationships on both sides
+        for (AirplaneCustomization c : this.customizations) {
+            if (!c.getOrderRequests().contains(this)) {
+                c.getOrderRequests().add(this);
+            }
         }
     }
 
-    /**
-     * Aggiunge una personalizzazione e imposta la FK lato figlio
-     */
     public void addCustomization(AirplaneCustomization c) {
-        customizations.add(c);
-        c.setOrderRequest(this);
+        if (!customizations.contains(c)) {
+            customizations.add(c);
+        }
+        if (!c.getOrderRequests().contains(this)) {
+            c.getOrderRequests().add(this);
+        }
     }
 
-    /**
-     * Rimuove una personalizzazione e scollega la FK lato figlio
-     */
     public void removeCustomization(AirplaneCustomization c) {
         customizations.remove(c);
-        c.setOrderRequest(null);
+        c.getOrderRequests().remove(this);
     }
 
     // ================

@@ -79,28 +79,34 @@ public class OrderRequestService {
 	}
 
 	@Transactional
-	public void createOrder(Users currentUser, Long airplaneId, List<Long> customizationIds) {
-		Airplane airplane = airplaneRepository.findById(airplaneId)
-				.orElseThrow(() -> new IllegalArgumentException("Aereo non trovato"));
+	public OrderRequest createOrder(Users user, Long airplaneId, List<Long> customizationIds) {
 
-		List<AirplaneCustomization> customizations = (customizationIds != null && !customizationIds.isEmpty())
-			    ? (List<AirplaneCustomization>) customizationRepository.findAllById(customizationIds)
-			    : new ArrayList<>();
+	    Airplane airplane = airplaneRepository.findById(airplaneId)
+	        .orElseThrow(() -> new RuntimeException("Airplane not found"));
 
-		OrderRequest order = new OrderRequest();
-		order.setUser(currentUser);
-		order.setAirplane(airplane);
-		order.setCustomizations(customizations);
-		order.setCreationDate(LocalDateTime.now());
-		order.setStato(Status.IN_ATTESA_DI_CONFERMA);
+	    // Load all customizations by IDs
+	    List<AirplaneCustomization> customizations = customizationIds.isEmpty() 
+	        ? new ArrayList<>() 
+	        : (List<AirplaneCustomization>) customizationRepository.findAllById(customizationIds);
 
-		// Calcola e imposta il prezzo totale
-		float totalPrice = airplane.getPrice();
+	    // Create new order
+	    OrderRequest order = new OrderRequest();
+	    order.setUser(user);
+	    order.setAirplane(airplane);
+	    order.setCreationDate(LocalDateTime.now());
+	    order.setStato(Status.IN_ATTESA_DI_CONFERMA);
+	    
+	    float totalPrice = airplane.getPrice();
 		for (AirplaneCustomization c : customizations) {
 			totalPrice += c.getModificationPrice();
 		}
 		order.setTotalPrice(totalPrice);
-		orderRequestRepository.save(order);
+
+	    // Set customizations
+	    order.setCustomizations(customizations); // this calls your setCustomizations method which syncs both sides
+
+	    // Save order with JPA
+	    return orderRequestRepository.save(order);
 	}
 
 	/**

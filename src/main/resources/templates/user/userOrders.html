@@ -30,6 +30,7 @@
             <th>Modello Aereo</th>
             <th>Immagine</th>
             <th>Data Ordine</th>
+			<th>Modifiche</th>
             <th>Stato</th>
 			<th>Prezzo</th>
             <th class="text-center">Azioni</th>
@@ -45,6 +46,11 @@
             <td th:text="${#temporals.format(order.creationDate, 'dd/MM/yyyy HH:mm')}">
               01/01/2025 12:00
             </td>
+			<td>
+				<p th:if="${map[order.id] != null}" 
+				      th:each="test : ${map[order.id]}" 
+				      th:text="${test.getModificationName()}"></p>
+			</td>
             <td th:text="${order.stato}">IN_ATTESA_DI_CONFERMA</td>
 			<td th:text="${order.totalPrice}">
 			</td>

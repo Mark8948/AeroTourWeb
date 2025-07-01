@@ -26,8 +26,8 @@ public class Users {
     @Column(nullable = false, unique = true)
     private String email;     // chiave univoca per identificare l'utente
 
-    @Column
-    private String pictureUrl;   // TODO remove
+    //@Column
+    //private String pictureUrl;   // TODO remove
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Credentials credentials;
@@ -38,7 +38,7 @@ public class Users {
         this.name = name;
         this.surname = surname;
         this.email = email;
-        this.pictureUrl = pictureUrl;
+        //this.pictureUrl = pictureUrl;
     }
 
     // --- Getter / Setter ---
@@ -71,13 +71,15 @@ public class Users {
         this.email = email;
     }
 
+    /*
     public String getPictureUrl() {
-        return pictureUrl;
+    	return pictureUrl;
     }
 
     public void setPictureUrl(String pictureUrl) {
-        this.pictureUrl = pictureUrl;
+    	this.pictureUrl = pictureUrl;
     }
+    */
 
     public Credentials getCredentials() {
         return credentials;

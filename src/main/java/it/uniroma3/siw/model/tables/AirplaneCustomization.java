@@ -27,10 +27,8 @@ public class AirplaneCustomization {
     @JoinColumn(name = "airplane_id")
     private Airplane airplane;
 
-    // === Relazione verso OrderRequest === //TODO Remove
-    @ManyToOne
-    @JoinColumn(name = "orderrequest_id", nullable = true)
-    private OrderRequest orderRequest;
+    @ManyToMany(mappedBy = "customizations")
+    private List<OrderRequest> orderRequests = new ArrayList<>();
 
     // =================
     // Getters & Setters
@@ -84,11 +82,12 @@ public class AirplaneCustomization {
         this.airplane = airplane;
     }
 
-    public OrderRequest getOrderRequest() {
-        return orderRequest;
-    }
+    public List<OrderRequest> getOrderRequests() {
+		return orderRequests;
+	}
 
-    public void setOrderRequest(OrderRequest orderRequest) {
-        this.orderRequest = orderRequest;
-    }
+    public void setOrderRequests(List<OrderRequest> orderRequests) {
+		this.orderRequests = orderRequests;
+	}
+    
 }

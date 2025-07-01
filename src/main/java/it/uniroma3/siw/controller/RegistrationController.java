@@ -72,7 +72,7 @@ public class RegistrationController {
         user.setName(userForm.getName());
         user.setSurname(userForm.getSurname());
         user.setEmail(userForm.getEmail());
-        user.setPictureUrl(null);
+        //user.setPictureUrl(null);
 
         // 5) Creo l’oggetto Credentials, collegandolo a Users
         Credentials cred = new Credentials();

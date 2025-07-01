@@ -76,7 +76,7 @@ public class UserPersonalAreaController {
 	    }
 
 	    //for(long idc :customizationIds )
-	    //	System.out.println(idc);
+	    	//System.out.println(idc);
 	    
 	    orderRequestService.createOrder(currentUser, id, customizationIds);
 
@@ -89,11 +89,21 @@ public class UserPersonalAreaController {
     public String orderHistory(Model model) {
         Users currentUser = usersService.getCurrentUser();
         List<OrderRequest> orders = orderRequestService.findOrdersByUser(currentUser);
-        for(OrderRequest mod: orders) {
-        	//System.out.println(mod.getCustomizations());
-        }
+        Map<Long,  List<AirplaneCustomization>> map = new HashMap<>();
         
+        for (OrderRequest order : orders) {
+            List<AirplaneCustomization> customizations = order.getCustomizations();
+            if (customizations == null) {
+                customizations = new ArrayList<>();
+            }
+            map.put(order.getId(), customizations);
+            
+            //for(AirplaneCustomization i : map.get(order.getId()))
+            //System.out.println(i.getModificationName());
+        }
+
         model.addAttribute("orders", orders);
+        model.addAttribute("map", map);
         return "user/userOrders";
     }
 

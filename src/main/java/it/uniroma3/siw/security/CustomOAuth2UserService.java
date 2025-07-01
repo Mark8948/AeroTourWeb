@@ -30,14 +30,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String email = oAuth2User.getAttribute("email");
         String name = oAuth2User.getAttribute("given_name");
         String surname = oAuth2User.getAttribute("family_name");
-        String pictureUrl = oAuth2User.getAttribute("picture");
+        //String pictureUrl = oAuth2User.getAttribute("picture");
 
         userRepository.findByEmail(email).orElseGet(() -> {
             Users newUser = new Users();
             newUser.setEmail(email);
             newUser.setName(name);
             newUser.setSurname(surname);
-            newUser.setPictureUrl(pictureUrl);
+            //newUser.setPictureUrl(pictureUrl);
             return userRepository.save(newUser);
         });
 
