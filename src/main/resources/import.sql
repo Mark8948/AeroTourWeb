@@ -25,9 +25,9 @@ SET row_security = off;
 -- Data for Name: airplanes; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.airplanes (id, build_year, description, image, model_name, price) VALUES (1, 2000, 'Luxor', 24918, 'Luxor', 100);
-INSERT INTO public.airplanes (id, build_year, description, image, model_name, price) VALUES (3, 2001, 'Gold', 24920, 'Gold', 2000);
-INSERT INTO public.airplanes (id, build_year, description, image, model_name, price) VALUES (4, 1950, 'Mammoth Dodo', 24921, 'Mammoth Dodo', 300);
+INSERT INTO public.airplanes (id, build_year, description, image, model_name, price) VALUES (1, 2000, 'Luxor', null, 'Luxor', 100);
+INSERT INTO public.airplanes (id, build_year, description, image, model_name, price) VALUES (3, 2001, 'Gold', null, 'Gold', 2000);
+INSERT INTO public.airplanes (id, build_year, description, image, model_name, price) VALUES (4, 1950, 'Mammoth Dodo', null, 'Mammoth Dodo', 300);
 
 
 --
